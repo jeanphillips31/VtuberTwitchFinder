@@ -6,7 +6,7 @@ export default function LiveStreamer(streamer: StreamerInfo) {
         <>
             <Card>
                 <CardBody>
-                    <Image src={streamer.thumbnailURL} alt={streamer.name}></Image>
+                    <Image src={streamer.thumbnailURL} alt={streamer.name} width={100} height={100}></Image>
                     <Stack>
                         <Heading>{streamer.name}</Heading>
                         <Text>{streamer.gameName} : {streamer.viewerCount}</Text>

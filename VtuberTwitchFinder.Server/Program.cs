@@ -1,24 +1,59 @@
-using Serilog;
+using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Models;
+using VtuberTwitchFinder.Server.Configuration;
+using VtuberTwitchFinder.Server.Services.TwitchService;
 
-namespace VtuberTwitchFinder.Server;
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-public class Program
+builder.Services.AddControllers();
+builder.Services.AddSwaggerGen(c =>
 {
-    public static void Main(string[] args)
-    {
-        IHost host = CreateHostBuilder(args).Build();
-        var logger = host.Services.GetRequiredService<ILogger<Program>>();
-    }
+    c.SwaggerDoc("v1",
+        new OpenApiInfo
+        {
+            Version = "v1",
+            Title = "VTuberTwitchFinder.Server - WebApi"
+        });
+});
 
-    public static IHostBuilder CreateHostBuilder(string[] args)
-    {
-        return Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
-            //.UseSerilog(LoggingConfiguration.ConfigureLogging);
-            .ConfigureLogging(loggingConfiguration =>
-                loggingConfiguration.ClearProviders())
-            .UseSerilog((hostingContext, loggerConfiguration) =>
-                loggerConfiguration.ReadFrom
-                    .Configuration(hostingContext.Configuration));
-    }
+#region Services
+
+//Add Services
+builder.Services.AddScoped<ITwitchService, TwitchService>();
+
+#endregion
+
+builder.Services.Configure<TwitchApiSettings>(builder.Configuration);
+builder.Services.AddHttpClient();
+
+#region Authentication
+
+// builder.Services.AddAuthentication(options =>
+// {
+//     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+// })
+//     .AddTwitch(options =>
+//     {
+//         options.ClientId = Configuration["ClientId"];
+//         options.ClientSecret = Configuration["ClientSecret"];
+//         options.SaveTokens = true;
+//     });
+
+#endregion
+
+WebApplication app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

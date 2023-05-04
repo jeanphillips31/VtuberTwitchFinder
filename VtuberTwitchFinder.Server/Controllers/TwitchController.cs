@@ -1,5 +1,7 @@
-﻿using FluentResults.Extensions.AspNetCore;
+﻿using System.Collections;
+using FluentResults.Extensions.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using VtuberTwitchFinder.Server.Controllers.DTClasses;
 using VtuberTwitchFinder.Server.Services.TwitchService;
 
 namespace VtuberTwitchFinder.Server.Controller;
@@ -9,7 +11,7 @@ namespace VtuberTwitchFinder.Server.Controller;
 public class TwitchController
 {
     [HttpGet("vtubers")]
-    public async Task<IActionResult> GetLiveVTubersAsync(ITwitchService twitchService)
+    public async Task<ActionResult<IEnumerable<DTVTuber>>> GetLiveVTubersAsync(ITwitchService twitchService)
     {
         var result = await twitchService.GetLiveVTubersAsync();
 

@@ -1,17 +1,14 @@
 import Head from 'next/head'
 import {Inter} from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import {fetchStreams} from "./api/twitch-api";
 import {Grid, GridItem} from "@chakra-ui/react";
 import LiveStreamer from "@/components/live-streamer";
+import {AxiosQuery} from "@/api";
 
 const inter = Inter({subsets: ['latin']})
 
-type Props = {
-    streams: StreamerInfo[]
-}
-
-export default function Home(props: Props) {
+export default function Home() {
+    const query = AxiosQuery.Query.useVtubersQuery();
     return (
         <>
             <Head>
@@ -21,33 +18,24 @@ export default function Home(props: Props) {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
             <main className={`${styles.main} ${inter.className}`}>
-                <Grid templateColumns="repeat(5, 1fr)" gap={6}>
+                {query.isLoading ? (<div>Loading!</div>) : (<Grid templateColumns="repeat(5, 1fr)" gap={6}>
                     {
-                        props.streams.map((stream) => (
-                            <GridItem key={stream.id}>
+                        query.data?.map((stream) => (
+                            <GridItem key={stream.twitchId}>
                                 <LiveStreamer
-                                    id={stream.id}
-                                    name={stream.name}
-                                    streamTitle={stream.streamTitle}
-                                    gameName={stream.gameName}
-                                    viewerCount={stream.viewerCount}
-                                    thumbnailURL={stream.thumbnailURL}
+                                    id={stream.twitchId ?? ""}
+                                    name={stream.twitchName ?? ""}
+                                    streamTitle={stream.streamTitle ?? ""}
+                                    gameName={stream.currentGameName ?? ""}
+                                    viewerCount={stream.currentViewerCount ?? 0}
+                                    thumbnailURL={stream.currentThumbnailUrl ?? ""}
                                 />
                             </GridItem>
                         ))
                     }
-                </Grid>
+                </Grid>)}
+
             </main>
         </>
     )
-}
-
-export async function getServerSideProps() {
-    const response = await fetchStreams();
-    const props: Props = {
-        streams: response
-    };
-    return {
-        props: props
-    }
 }

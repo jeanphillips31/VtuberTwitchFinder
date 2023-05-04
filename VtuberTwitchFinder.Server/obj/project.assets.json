@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {
+    "net7.0": {
       "FluentResults/3.15.2": {
         "type": "package",
         "dependencies": {
@@ -802,12 +802,12 @@
           "System.Diagnostics.DiagnosticSource": "7.0.0"
         },
         "compile": {
-          "lib/net6.0/Serilog.Enrichers.Span.dll": {
+          "lib/net7.0/Serilog.Enrichers.Span.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net6.0/Serilog.Enrichers.Span.dll": {
+          "lib/net7.0/Serilog.Enrichers.Span.dll": {
             "related": ".xml"
           }
         }
@@ -1037,16 +1037,13 @@
       },
       "System.Diagnostics.DiagnosticSource/7.0.0": {
         "type": "package",
-        "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
-        },
         "compile": {
-          "lib/net6.0/System.Diagnostics.DiagnosticSource.dll": {
+          "lib/net7.0/System.Diagnostics.DiagnosticSource.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net6.0/System.Diagnostics.DiagnosticSource.dll": {
+          "lib/net7.0/System.Diagnostics.DiagnosticSource.dll": {
             "related": ".xml"
           }
         },
@@ -1862,12 +1859,12 @@
       "TwitchLib.EventSub.Core/2.0.0": {
         "type": "package",
         "compile": {
-          "lib/net6.0/TwitchLib.EventSub.Core.dll": {
+          "lib/net7.0/TwitchLib.EventSub.Core.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net6.0/TwitchLib.EventSub.Core.dll": {
+          "lib/net7.0/TwitchLib.EventSub.Core.dll": {
             "related": ".xml"
           }
         }
@@ -1879,12 +1876,12 @@
           "TwitchLib.EventSub.Core": "2.0.0"
         },
         "compile": {
-          "lib/net6.0/TwitchLib.EventSub.Websockets.dll": {
+          "lib/net7.0/TwitchLib.EventSub.Websockets.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net6.0/TwitchLib.EventSub.Websockets.dll": {
+          "lib/net7.0/TwitchLib.EventSub.Websockets.dll": {
             "related": ".xml"
           }
         }
@@ -6468,7 +6465,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net6.0": [
+    "net7.0": [
       "FluentResults >= 3.15.2",
       "FluentResults.Extensions.AspNetCore >= 0.1.0",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.15.1",
@@ -6506,15 +6503,15 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net6.0"
+        "net7.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "projectReferences": {}
         }
       },
@@ -6525,8 +6522,8 @@
       }
     },
     "frameworks": {
-      "net6.0": {
-        "targetAlias": "net6.0",
+      "net7.0": {
+        "targetAlias": "net7.0",
         "dependencies": {
           "FluentResults": {
             "target": "Package",

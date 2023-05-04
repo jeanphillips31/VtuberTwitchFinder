@@ -8,7 +8,6 @@
     ".NETCoreApp,Version=v7.0": {
       "VtuberTwitchFinder.Server/1.0.0": {
         "dependencies": {
-          "AspNet.Security.OAuth.Twitch": "7.0.2",
           "FluentResults": "3.15.2",
           "FluentResults.Extensions.AspNetCore": "0.1.0",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.15.1",
@@ -25,14 +24,6 @@
         },
         "runtime": {
           "VtuberTwitchFinder.Server.dll": {}
-        }
-      },
-      "AspNet.Security.OAuth.Twitch/7.0.2": {
-        "runtime": {
-          "lib/net7.0/AspNet.Security.OAuth.Twitch.dll": {
-            "assemblyVersion": "7.0.2.0",
-            "fileVersion": "7.0.223.21669"
-          }
         }
       },
       "FluentResults/3.15.2": {
@@ -972,13 +963,6 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
-    },
-    "AspNet.Security.OAuth.Twitch/7.0.2": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Smz1Qy5AhcrNHrVhE9Fto20vsE/K5VBJd6YiChJYILYi2SEF6on/VrMm7xn8uDMHWb3NW8Fpoe6boM/WuYMAzQ==",
-      "path": "aspnet.security.oauth.twitch/7.0.2",
-      "hashPath": "aspnet.security.oauth.twitch.7.0.2.nupkg.sha512"
     },
     "FluentResults/3.15.2": {
       "type": "package",

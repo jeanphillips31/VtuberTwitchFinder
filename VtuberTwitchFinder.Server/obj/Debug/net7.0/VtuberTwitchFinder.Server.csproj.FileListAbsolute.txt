@@ -5,7 +5,6 @@ A:\Websites\VtuberTwitchFinder\VtuberTwitchFinder.Server\bin\Debug\net7.0\Vtuber
 A:\Websites\VtuberTwitchFinder\VtuberTwitchFinder.Server\bin\Debug\net7.0\VtuberTwitchFinder.Server.runtimeconfig.json
 A:\Websites\VtuberTwitchFinder\VtuberTwitchFinder.Server\bin\Debug\net7.0\VtuberTwitchFinder.Server.dll
 A:\Websites\VtuberTwitchFinder\VtuberTwitchFinder.Server\bin\Debug\net7.0\VtuberTwitchFinder.Server.pdb
-A:\Websites\VtuberTwitchFinder\VtuberTwitchFinder.Server\bin\Debug\net7.0\AspNet.Security.OAuth.Twitch.dll
 A:\Websites\VtuberTwitchFinder\VtuberTwitchFinder.Server\bin\Debug\net7.0\FluentResults.dll
 A:\Websites\VtuberTwitchFinder\VtuberTwitchFinder.Server\bin\Debug\net7.0\FluentResults.Extensions.AspNetCore.dll
 A:\Websites\VtuberTwitchFinder\VtuberTwitchFinder.Server\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll

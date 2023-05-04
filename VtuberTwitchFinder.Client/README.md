@@ -1,3 +1,6 @@
+```npx react-query-swagger /tanstack /input:https://localhost:44348/swagger/v1/swagger.json /output:src/api/axios-client.ts /template:Axios```
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped
 with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
