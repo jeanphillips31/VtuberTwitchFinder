@@ -1,14 +1,5 @@
-import {Card, CardHeader, CardBody, CardFooter, Stack, Heading, Text} from '@chakra-ui/react'
+import {Card, CardBody, Heading, Stack, Text} from '@chakra-ui/react'
 import Image from "next/image";
-
-interface StreamerInfo {
-    id: number;
-    name: string;
-    streamTitle: string;
-    gameName: string;
-    viewerCount: number;
-    thumbnailURL: string;
-}
 
 export default function LiveStreamer(streamer: StreamerInfo) {
     return (

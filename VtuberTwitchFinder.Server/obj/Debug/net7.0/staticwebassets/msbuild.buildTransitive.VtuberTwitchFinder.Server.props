@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\VtuberTwitchFinder.Server.props" />
+</Project>

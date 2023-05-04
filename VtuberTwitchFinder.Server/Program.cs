@@ -1,25 +1,24 @@
-var builder = WebApplication.CreateBuilder(args);
+using Serilog;
 
-// Add services to the container.
+namespace VtuberTwitchFinder.Server;
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public static void Main(string[] args)
+    {
+        IHost host = CreateHostBuilder(args).Build();
+        var logger = host.Services.GetRequiredService<ILogger<Program>>();
+    }
+
+    public static IHostBuilder CreateHostBuilder(string[] args)
+    {
+        return Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+            //.UseSerilog(LoggingConfiguration.ConfigureLogging);
+            .ConfigureLogging(loggingConfiguration =>
+                loggingConfiguration.ClearProviders())
+            .UseSerilog((hostingContext, loggerConfiguration) =>
+                loggerConfiguration.ReadFrom
+                    .Configuration(hostingContext.Configuration));
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
