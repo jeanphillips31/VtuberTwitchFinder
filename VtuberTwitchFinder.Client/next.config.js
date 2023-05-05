@@ -9,6 +9,12 @@ const nextConfig = {
                 port: '',
                 pathname: '**',
             },
+            {
+                protocol: 'https',
+                hostname: 'cdn.7tv.app',
+                port: '',
+                pathname: '**',
+            },
         ],
     },
 }

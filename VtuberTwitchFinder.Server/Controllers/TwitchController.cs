@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using FluentResults.Extensions.AspNetCore;
+﻿using FluentResults.Extensions.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using VtuberTwitchFinder.Server.Controllers.DTClasses;
 using VtuberTwitchFinder.Server.Services.TwitchService;
@@ -14,6 +13,14 @@ public class TwitchController
     public async Task<ActionResult<IEnumerable<DTVTuber>>> GetLiveVTubersAsync(ITwitchService twitchService)
     {
         var result = await twitchService.GetLiveVTubersAsync();
+
+        return result.ToActionResult();
+    }
+
+    [HttpGet("emotes")]
+    public async Task<ActionResult<DTStreamerEmotes>> GetTwitchEmotes([FromQuery] int broadcasterId, ITwitchService twitchService)
+    {
+        var result = await twitchService.GetChannelEmotes(broadcasterId);
 
         return result.ToActionResult();
     }

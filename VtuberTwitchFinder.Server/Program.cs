@@ -1,6 +1,6 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using VtuberTwitchFinder.Server.Configuration;
+using VtuberTwitchFinder.Server.Services.SevenTvService;
 using VtuberTwitchFinder.Server.Services.TwitchService;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -20,6 +20,7 @@ builder.Services.AddSwaggerGen(c =>
 
 //Add Services
 builder.Services.AddScoped<ITwitchService, TwitchService>();
+builder.Services.AddScoped<ISevenTvService, SevenTvService>();
 
 #endregion
 

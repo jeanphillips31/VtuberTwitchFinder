@@ -18,22 +18,24 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
             <main className={`${styles.main} ${inter.className}`}>
-                {query.isLoading ? (<div>Loading!</div>) : (<Grid templateColumns="repeat(5, 1fr)" gap={6}>
-                    {
-                        query.data?.map((stream) => (
-                            <GridItem key={stream.twitchId}>
-                                <LiveStreamer
-                                    id={stream.twitchId ?? ""}
-                                    name={stream.twitchName ?? ""}
-                                    streamTitle={stream.streamTitle ?? ""}
-                                    gameName={stream.currentGameName ?? ""}
-                                    viewerCount={stream.currentViewerCount ?? 0}
-                                    thumbnailURL={stream.currentThumbnailUrl ?? ""}
-                                />
-                            </GridItem>
-                        ))
-                    }
-                </Grid>)}
+                {query.isLoading ? (<div>Loading!</div>) : (
+                    <Grid templateColumns="repeat(5, 1fr)" gap={6}>
+                        {
+                            query.data?.map((stream) => (
+                                <GridItem key={stream.twitchId}>
+                                    <LiveStreamer
+                                        id={stream.twitchId ?? ""}
+                                        name={stream.twitchName ?? ""}
+                                        username={stream.twitchUsername ?? ""}
+                                        streamTitle={stream.streamTitle ?? ""}
+                                        gameName={stream.currentGameName ?? ""}
+                                        viewerCount={stream.currentViewerCount ?? 0}
+                                        thumbnailURL={stream.currentThumbnailUrl ?? ""}
+                                    />
+                                </GridItem>
+                            ))
+                        }
+                    </Grid>)}
 
             </main>
         </>

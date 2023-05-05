@@ -37,6 +37,69 @@ export class Client {
     }
 
     /**
+     * @param broadcasterId (optional) 
+     * @return Success
+     */
+    emotesAll(broadcasterId: number | undefined, cancelToken?: CancelToken | undefined): Promise<DTEmote[]> {
+        let url_ = this.baseUrl + "/api/SevenTv/emotes?";
+        if (broadcasterId === null)
+            throw new Error("The parameter 'broadcasterId' cannot be null.");
+        else if (broadcasterId !== undefined)
+            url_ += "broadcasterId=" + encodeURIComponent("" + broadcasterId) + "&";
+          url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processEmotesAll(_response);
+        });
+    }
+
+    protected processEmotesAll(response: AxiosResponse): Promise<DTEmote[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DTEmote.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return Promise.resolve<DTEmote[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<DTEmote[]>(null as any);
+    }
+
+    /**
      * @return Success
      */
     vtubers( cancelToken?: CancelToken | undefined): Promise<DTVTuber[]> {
@@ -93,6 +156,62 @@ export class Client {
         }
         return Promise.resolve<DTVTuber[]>(null as any);
     }
+
+    /**
+     * @param broadcasterId (optional) 
+     * @return Success
+     */
+    emotes(broadcasterId: number | undefined, cancelToken?: CancelToken | undefined): Promise<DTStreamerEmotes> {
+        let url_ = this.baseUrl + "/api/Twitch/emotes?";
+        if (broadcasterId === null)
+            throw new Error("The parameter 'broadcasterId' cannot be null.");
+        else if (broadcasterId !== undefined)
+            url_ += "broadcasterId=" + encodeURIComponent("" + broadcasterId) + "&";
+          url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processEmotes(_response);
+        });
+    }
+
+    protected processEmotes(response: AxiosResponse): Promise<DTStreamerEmotes> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = DTStreamerEmotes.fromJS(resultData200);
+            return Promise.resolve<DTStreamerEmotes>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<DTStreamerEmotes>(null as any);
+    }
 }
 
 //-----/ClientClass----
@@ -102,9 +221,182 @@ export * as Query from './axios-client/Query';
 
 
 //-----Types.File-----
+export class DTEmote implements IDTEmote {
+    id?: string | undefined;
+    name?: string | undefined;
+    url?: string | undefined;
+
+    constructor(data?: IDTEmote) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.url = _data["url"];
+        }
+    }
+
+    static fromJS(data: any): DTEmote {
+        data = typeof data === 'object' ? data : {};
+        let result = new DTEmote();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["url"] = this.url;
+        return data;
+    }
+}
+
+export interface IDTEmote {
+    id?: string | undefined;
+    name?: string | undefined;
+    url?: string | undefined;
+}
+
+export class DTStreamerEmotes implements IDTStreamerEmotes {
+    followerEmotes?: DTEmote[] | undefined;
+    subscriptionEmotes?: DTSubscriptionEmotes;
+    bitsEmotes?: DTEmote[] | undefined;
+
+    constructor(data?: IDTStreamerEmotes) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["followerEmotes"])) {
+                this.followerEmotes = [] as any;
+                for (let item of _data["followerEmotes"])
+                    this.followerEmotes!.push(DTEmote.fromJS(item));
+            }
+            this.subscriptionEmotes = _data["subscriptionEmotes"] ? DTSubscriptionEmotes.fromJS(_data["subscriptionEmotes"]) : <any>undefined;
+            if (Array.isArray(_data["bitsEmotes"])) {
+                this.bitsEmotes = [] as any;
+                for (let item of _data["bitsEmotes"])
+                    this.bitsEmotes!.push(DTEmote.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): DTStreamerEmotes {
+        data = typeof data === 'object' ? data : {};
+        let result = new DTStreamerEmotes();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.followerEmotes)) {
+            data["followerEmotes"] = [];
+            for (let item of this.followerEmotes)
+                data["followerEmotes"].push(item.toJSON());
+        }
+        data["subscriptionEmotes"] = this.subscriptionEmotes ? this.subscriptionEmotes.toJSON() : <any>undefined;
+        if (Array.isArray(this.bitsEmotes)) {
+            data["bitsEmotes"] = [];
+            for (let item of this.bitsEmotes)
+                data["bitsEmotes"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IDTStreamerEmotes {
+    followerEmotes?: DTEmote[] | undefined;
+    subscriptionEmotes?: DTSubscriptionEmotes;
+    bitsEmotes?: DTEmote[] | undefined;
+}
+
+export class DTSubscriptionEmotes implements IDTSubscriptionEmotes {
+    tier1Emotes?: DTEmote[] | undefined;
+    tier2Emotes?: DTEmote[] | undefined;
+    tier3Emotes?: DTEmote[] | undefined;
+
+    constructor(data?: IDTSubscriptionEmotes) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["tier1Emotes"])) {
+                this.tier1Emotes = [] as any;
+                for (let item of _data["tier1Emotes"])
+                    this.tier1Emotes!.push(DTEmote.fromJS(item));
+            }
+            if (Array.isArray(_data["tier2Emotes"])) {
+                this.tier2Emotes = [] as any;
+                for (let item of _data["tier2Emotes"])
+                    this.tier2Emotes!.push(DTEmote.fromJS(item));
+            }
+            if (Array.isArray(_data["tier3Emotes"])) {
+                this.tier3Emotes = [] as any;
+                for (let item of _data["tier3Emotes"])
+                    this.tier3Emotes!.push(DTEmote.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): DTSubscriptionEmotes {
+        data = typeof data === 'object' ? data : {};
+        let result = new DTSubscriptionEmotes();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.tier1Emotes)) {
+            data["tier1Emotes"] = [];
+            for (let item of this.tier1Emotes)
+                data["tier1Emotes"].push(item.toJSON());
+        }
+        if (Array.isArray(this.tier2Emotes)) {
+            data["tier2Emotes"] = [];
+            for (let item of this.tier2Emotes)
+                data["tier2Emotes"].push(item.toJSON());
+        }
+        if (Array.isArray(this.tier3Emotes)) {
+            data["tier3Emotes"] = [];
+            for (let item of this.tier3Emotes)
+                data["tier3Emotes"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IDTSubscriptionEmotes {
+    tier1Emotes?: DTEmote[] | undefined;
+    tier2Emotes?: DTEmote[] | undefined;
+    tier3Emotes?: DTEmote[] | undefined;
+}
+
 export class DTVTuber implements IDTVTuber {
     twitchId?: string | undefined;
     twitchName?: string | undefined;
+    twitchUsername?: string | undefined;
     streamTitle?: string | undefined;
     currentGameName?: string | undefined;
     currentViewerCount?: number;
@@ -123,6 +415,7 @@ export class DTVTuber implements IDTVTuber {
         if (_data) {
             this.twitchId = _data["twitchId"];
             this.twitchName = _data["twitchName"];
+            this.twitchUsername = _data["twitchUsername"];
             this.streamTitle = _data["streamTitle"];
             this.currentGameName = _data["currentGameName"];
             this.currentViewerCount = _data["currentViewerCount"];
@@ -141,6 +434,7 @@ export class DTVTuber implements IDTVTuber {
         data = typeof data === 'object' ? data : {};
         data["twitchId"] = this.twitchId;
         data["twitchName"] = this.twitchName;
+        data["twitchUsername"] = this.twitchUsername;
         data["streamTitle"] = this.streamTitle;
         data["currentGameName"] = this.currentGameName;
         data["currentViewerCount"] = this.currentViewerCount;
@@ -152,6 +446,7 @@ export class DTVTuber implements IDTVTuber {
 export interface IDTVTuber {
     twitchId?: string | undefined;
     twitchName?: string | undefined;
+    twitchUsername?: string | undefined;
     streamTitle?: string | undefined;
     currentGameName?: string | undefined;
     currentViewerCount?: number;
@@ -285,7 +580,9 @@ export function getResultTypeClassKey(queryKey: QueryKey): string {
 
 export function initPersister() {
   
+  addResultTypeFactory('Client___emotesAll', (data: any) => { const result = new DTEmote(); result.init(data); return result; });
   addResultTypeFactory('Client___vtubers', (data: any) => { const result = new DTVTuber(); result.init(data); return result; });
+  addResultTypeFactory('Client___emotes', (data: any) => { const result = new DTStreamerEmotes(); result.init(data); return result; });
 
 
 }

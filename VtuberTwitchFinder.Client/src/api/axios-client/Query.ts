@@ -20,6 +20,111 @@ import { createClient, getClientFactory } from './helpers';
 export const Client = () => getClientFactory()(ClientClass);
 import type { AxiosRequestConfig } from 'axios';
 
+export type EmotesAllQueryParameters = {
+  broadcasterId: number | undefined;
+};
+
+export type EmotesQueryParameters = {
+  broadcasterId: number | undefined;
+};
+
+    
+export function emotesAllUrl(broadcasterId: number | undefined): string {
+  let url_ = getBaseUrl() + "/api/SevenTv/emotes?";
+if (broadcasterId === null)
+    throw new Error("The parameter 'broadcasterId' cannot be null.");
+else if (broadcasterId !== undefined)
+    url_ += "broadcasterId=" + encodeURIComponent("" + broadcasterId) + "&";
+  url_ = url_.replace(/[?&]$/, "");
+  return url_;
+}
+
+let emotesAllDefaultOptions: UseQueryOptions<Types.DTEmote[], unknown, Types.DTEmote[]> = {
+  queryFn: __emotesAll,
+};
+export function getEmotesAllDefaultOptions(): UseQueryOptions<Types.DTEmote[], unknown, Types.DTEmote[]> {
+  return emotesAllDefaultOptions;
+};
+export function setEmotesAllDefaultOptions(options: UseQueryOptions<Types.DTEmote[], unknown, Types.DTEmote[]>) {
+  emotesAllDefaultOptions = options;
+}
+
+export function emotesAllQueryKey(broadcasterId: number | undefined): QueryKey;
+export function emotesAllQueryKey(...params: any[]): QueryKey {
+  if (params.length === 1 && isParameterObject(params[0])) {
+    const { broadcasterId,  } = params[0] as EmotesAllQueryParameters;
+
+    return trimArrayEnd([
+        'Client',
+        'emotesAll',
+        broadcasterId as any,
+      ]);
+  } else {
+    return trimArrayEnd([
+        'Client',
+        'emotesAll',
+        ...params
+      ]);
+  }
+}
+function __emotesAll(context: QueryFunctionContext) {
+  return Client().emotesAll(
+      context.queryKey[2] as number | undefined    );
+}
+
+export function useEmotesAllQuery<TSelectData = Types.DTEmote[], TError = unknown>(dto: EmotesAllQueryParameters, options?: UseQueryOptions<Types.DTEmote[], TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+/**
+ * @param broadcasterId (optional) 
+ * @return Success
+ */
+export function useEmotesAllQuery<TSelectData = Types.DTEmote[], TError = unknown>(broadcasterId: number | undefined, options?: UseQueryOptions<Types.DTEmote[], TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useEmotesAllQuery<TSelectData = Types.DTEmote[], TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
+  let options: UseQueryOptions<Types.DTEmote[], TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
+  let broadcasterId: any = undefined;
+  
+  if (params.length > 0) {
+    if (isParameterObject(params[0])) {
+      ({ broadcasterId,  } = params[0] as EmotesAllQueryParameters);
+      options = params[1];
+      axiosConfig = params[2];
+    } else {
+      [broadcasterId, options, axiosConfig] = params;
+    }
+  }
+
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
+
+  return useQuery<Types.DTEmote[], TError, TSelectData>({
+    queryFn: __emotesAll,
+    queryKey: emotesAllQueryKey(broadcasterId),
+    ...emotesAllDefaultOptions as unknown as UseQueryOptions<Types.DTEmote[], TError, TSelectData>,
+    ...options,
+  });
+}
+/**
+ * @param broadcasterId (optional) 
+ * @return Success
+ */
+export function setEmotesAllData(queryClient: QueryClient, updater: (data: Types.DTEmote[] | undefined) => Types.DTEmote[], broadcasterId: number | undefined) {
+  queryClient.setQueryData(emotesAllQueryKey(broadcasterId),
+    updater
+  );
+}
+
+/**
+ * @param broadcasterId (optional) 
+ * @return Success
+ */
+export function setEmotesAllDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: Types.DTEmote[] | undefined) => Types.DTEmote[]) {
+  queryClient.setQueryData(queryKey, updater);
+}
+    
     
 export function vtubersUrl(): string {
   let url_ = getBaseUrl() + "/api/Twitch/vtubers";
@@ -88,5 +193,102 @@ export function setVtubersData(queryClient: QueryClient, updater: (data: Types.D
  * @return Success
  */
 export function setVtubersDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: Types.DTVTuber[] | undefined) => Types.DTVTuber[]) {
+  queryClient.setQueryData(queryKey, updater);
+}
+    
+    
+export function emotesUrl(broadcasterId: number | undefined): string {
+  let url_ = getBaseUrl() + "/api/Twitch/emotes?";
+if (broadcasterId === null)
+    throw new Error("The parameter 'broadcasterId' cannot be null.");
+else if (broadcasterId !== undefined)
+    url_ += "broadcasterId=" + encodeURIComponent("" + broadcasterId) + "&";
+  url_ = url_.replace(/[?&]$/, "");
+  return url_;
+}
+
+let emotesDefaultOptions: UseQueryOptions<Types.DTStreamerEmotes, unknown, Types.DTStreamerEmotes> = {
+  queryFn: __emotes,
+};
+export function getEmotesDefaultOptions(): UseQueryOptions<Types.DTStreamerEmotes, unknown, Types.DTStreamerEmotes> {
+  return emotesDefaultOptions;
+};
+export function setEmotesDefaultOptions(options: UseQueryOptions<Types.DTStreamerEmotes, unknown, Types.DTStreamerEmotes>) {
+  emotesDefaultOptions = options;
+}
+
+export function emotesQueryKey(broadcasterId: number | undefined): QueryKey;
+export function emotesQueryKey(...params: any[]): QueryKey {
+  if (params.length === 1 && isParameterObject(params[0])) {
+    const { broadcasterId,  } = params[0] as EmotesQueryParameters;
+
+    return trimArrayEnd([
+        'Client',
+        'emotes',
+        broadcasterId as any,
+      ]);
+  } else {
+    return trimArrayEnd([
+        'Client',
+        'emotes',
+        ...params
+      ]);
+  }
+}
+function __emotes(context: QueryFunctionContext) {
+  return Client().emotes(
+      context.queryKey[2] as number | undefined    );
+}
+
+export function useEmotesQuery<TSelectData = Types.DTStreamerEmotes, TError = unknown>(dto: EmotesQueryParameters, options?: UseQueryOptions<Types.DTStreamerEmotes, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+/**
+ * @param broadcasterId (optional) 
+ * @return Success
+ */
+export function useEmotesQuery<TSelectData = Types.DTStreamerEmotes, TError = unknown>(broadcasterId: number | undefined, options?: UseQueryOptions<Types.DTStreamerEmotes, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useEmotesQuery<TSelectData = Types.DTStreamerEmotes, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
+  let options: UseQueryOptions<Types.DTStreamerEmotes, TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
+  let broadcasterId: any = undefined;
+  
+  if (params.length > 0) {
+    if (isParameterObject(params[0])) {
+      ({ broadcasterId,  } = params[0] as EmotesQueryParameters);
+      options = params[1];
+      axiosConfig = params[2];
+    } else {
+      [broadcasterId, options, axiosConfig] = params;
+    }
+  }
+
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
+
+  return useQuery<Types.DTStreamerEmotes, TError, TSelectData>({
+    queryFn: __emotes,
+    queryKey: emotesQueryKey(broadcasterId),
+    ...emotesDefaultOptions as unknown as UseQueryOptions<Types.DTStreamerEmotes, TError, TSelectData>,
+    ...options,
+  });
+}
+/**
+ * @param broadcasterId (optional) 
+ * @return Success
+ */
+export function setEmotesData(queryClient: QueryClient, updater: (data: Types.DTStreamerEmotes | undefined) => Types.DTStreamerEmotes, broadcasterId: number | undefined) {
+  queryClient.setQueryData(emotesQueryKey(broadcasterId),
+    updater
+  );
+}
+
+/**
+ * @param broadcasterId (optional) 
+ * @return Success
+ */
+export function setEmotesDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: Types.DTStreamerEmotes | undefined) => Types.DTStreamerEmotes) {
   queryClient.setQueryData(queryKey, updater);
 }
