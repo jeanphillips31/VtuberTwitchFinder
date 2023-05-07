@@ -1,4 +1,4 @@
-﻿namespace VtuberTwitchFinder.Server.Controllers.DTClasses;
+﻿namespace VtuberTwitchFinder.Server.Controllers.DTClasses.APIResponses;
 
 public class DTTwitchStream
 {
@@ -17,4 +17,5 @@ public class DTTwitchStream
     public string thumbnail_url { get; set; }
     public List<object> tag_ids { get; set; }
     public bool is_mature { get; set; }
+    public string profile_image_url { get; set; }
 }

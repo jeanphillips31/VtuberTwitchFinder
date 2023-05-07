@@ -1,4 +1,4 @@
-﻿namespace VtuberTwitchFinder.Server.Controllers.DTClasses;
+﻿namespace VtuberTwitchFinder.Server.Controllers.DTClasses.APIResponses;
 
 public class DTSevenTvResponse
 {

@@ -22,7 +22,7 @@ interface Props {
 export default function EmoteAccordionItem(props: Props) {
     return (
         <>
-            <AccordionItem isDisabled={props.emotes?.length == 0}>
+            <AccordionItem isDisabled={props.emotes == null || props.emotes?.length == 0}>
                 <h2>
                     <AccordionButton>
                         <Box as="span" flex='1' textAlign='left'>

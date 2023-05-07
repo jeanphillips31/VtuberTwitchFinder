@@ -2,38 +2,13 @@ import {
     Card,
     CardBody,
     Heading,
-    HStack,
     VStack,
     Text,
-    IconButton,
     StackDivider,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverArrow,
-    PopoverCloseButton,
-    PopoverHeader,
-    PopoverBody,
     Box,
-    PopoverFooter,
-    Button,
-    Accordion,
-    AccordionItem,
-    AccordionButton,
-    AccordionPanel,
-    Spinner,
-    Grid,
-    GridItem,
-    useDisclosure
+    Image, HStack
 } from '@chakra-ui/react'
-import {AddIcon} from '@chakra-ui/icons'
-import Image from "next/image";
 import {useState} from "react";
-import Link from "next/link";
-import {AxiosQuery} from "@/api";
-import EmoteAccordionItem from "@/components/emote-accordion-item";
-import {DTEmote} from "@/api/axios-client";
-import StreamInfoPopover from "@/components/stream-info-popover";
 import StreamInfoModal from "@/components/stream-info-modal";
 
 export default function LiveStreamer(streamer: StreamerInfo) {
@@ -47,13 +22,24 @@ export default function LiveStreamer(streamer: StreamerInfo) {
                 <CardBody>
                     <VStack
                         divider={<StackDivider borderColor='gray.200'/>}
-                        spacing={4}
+                        spacing={2}
                     >
-                        <Image src={streamer.thumbnailURL} alt={streamer.name} width={256} height={144}></Image>
-                        <Box display='flex' alignItems='center'><Heading>{streamer.name}</Heading></Box>
-                        <HStack>
-                            <Text>{streamer.gameName} : {streamer.viewerCount}</Text>
-                            <Text>{streamer.id}</Text>
+                        <Box position="relative" width={384}
+                             height={216}>
+                            <Image src={streamer.thumbnailURL} alt={streamer.name} height="100%" width="100%">
+                            </Image>
+                            <Box position="absolute" bottom={1} right={2} bg='gray.50' rounded='sm' paddingX={1}>
+                                <Text
+                                    fontSize='smaller'>{streamer.viewerCount.toLocaleString("en-US") + " Viewers"}</Text>
+                            </Box>
+                        </Box>
+                        <HStack spacing={2}>
+                            <Image src={streamer.profileURL} alt={streamer.name} borderRadius='full'
+                                   boxSize='60px'></Image>
+                            <VStack align="left">
+                                <Heading size="lg" isTruncated={true}>{streamer.name}</Heading>
+                                <Text isTruncated={true} fontSize="sm">{streamer.gameName}</Text>
+                            </VStack>
                             {hover ?
                                 (
                                     <StreamInfoModal

@@ -9,4 +9,6 @@ public class DTVTuber
     public string CurrentGameName { get; set; }
     public int CurrentViewerCount { get; set; }
     public string CurrentThumbnailUrl { get; set; }
+    public string Language { get; set; }
+    public string ProfilePictureUrl { get; set; }
 }

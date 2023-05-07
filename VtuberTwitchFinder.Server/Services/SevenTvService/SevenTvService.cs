@@ -1,5 +1,7 @@
-﻿using FluentResults;
+﻿using System.Net;
+using FluentResults;
 using VtuberTwitchFinder.Server.Controllers.DTClasses;
+using VtuberTwitchFinder.Server.Controllers.DTClasses.APIResponses;
 
 namespace VtuberTwitchFinder.Server.Services.SevenTvService;
 
@@ -24,20 +26,20 @@ public class SevenTvService : ISevenTvService
             //Add a small delay to rate limit requests
             await Task.Delay(100);
 
-            var checkForAccount
-                = await _client.GetFromJsonAsync<DTSevenTvResponse[]>(
-                    $"{_BASE_URL}/users/{broadcasterId}");
 
-            if (checkForAccount)
-            {
-                
-            }
-            var response
-                = await _client.GetFromJsonAsync<DTSevenTvResponse[]>(
-                    $"{_BASE_URL}/users/{broadcasterId}/emotes");
-            if (response == null) return Result.Fail("Failed to deserialize 7Tv Response");
+            //Generate request and send it
+            var message = new HttpRequestMessage(HttpMethod.Get,
+                $"{_BASE_URL}/users/{broadcasterId}/emotes");
+            HttpResponseMessage messageResponse = await _client.SendAsync(message);
 
-            return Result.Ok(response.Select(emote => new DTEmote
+            //If the broadcaster does not have a 7TV account, we want to still return an Ok result
+            if (messageResponse.StatusCode != HttpStatusCode.OK) return Result.Ok();
+
+            //Deserialize data
+            var responseContent = await messageResponse.Content.ReadFromJsonAsync<DTSevenTvResponse[]>();
+            if (responseContent == null) return Result.Fail("Failed to deserialize 7TV Response");
+
+            return Result.Ok(responseContent.Select(emote => new DTEmote
             {
                 Id = emote.id,
                 Name = emote.name,

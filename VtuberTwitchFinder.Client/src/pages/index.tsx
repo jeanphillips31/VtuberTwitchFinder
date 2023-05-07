@@ -1,9 +1,10 @@
 import Head from 'next/head'
 import {Inter} from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import {Grid, GridItem} from "@chakra-ui/react";
+import {Grid, GridItem, Skeleton, Spinner} from "@chakra-ui/react";
 import LiveStreamer from "@/components/live-streamer";
 import {AxiosQuery} from "@/api";
+import Footer from "@/components/footer";
 
 const inter = Inter({subsets: ['latin']})
 
@@ -18,8 +19,8 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
             <main className={`${styles.main} ${inter.className}`}>
-                {query.isLoading ? (<div>Loading!</div>) : (
-                    <Grid templateColumns="repeat(5, 1fr)" gap={6}>
+                {query.isLoading ? (<Spinner/>) : (
+                    <Grid templateColumns="repeat(3, 1fr)" gap={6}>
                         {
                             query.data?.map((stream) => (
                                 <GridItem key={stream.twitchId}>
@@ -31,13 +32,15 @@ export default function Home() {
                                         gameName={stream.currentGameName ?? ""}
                                         viewerCount={stream.currentViewerCount ?? 0}
                                         thumbnailURL={stream.currentThumbnailUrl ?? ""}
+                                        profileURL={stream.profilePictureUrl ?? ""}
                                     />
                                 </GridItem>
                             ))
                         }
-                    </Grid>)}
-
+                    </Grid>)
+                }
             </main>
+            <Footer/>
         </>
     )
 }

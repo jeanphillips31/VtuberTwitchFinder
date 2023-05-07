@@ -401,6 +401,8 @@ export class DTVTuber implements IDTVTuber {
     currentGameName?: string | undefined;
     currentViewerCount?: number;
     currentThumbnailUrl?: string | undefined;
+    language?: string | undefined;
+    profilePictureUrl?: string | undefined;
 
     constructor(data?: IDTVTuber) {
         if (data) {
@@ -420,6 +422,8 @@ export class DTVTuber implements IDTVTuber {
             this.currentGameName = _data["currentGameName"];
             this.currentViewerCount = _data["currentViewerCount"];
             this.currentThumbnailUrl = _data["currentThumbnailUrl"];
+            this.language = _data["language"];
+            this.profilePictureUrl = _data["profilePictureUrl"];
         }
     }
 
@@ -439,6 +443,8 @@ export class DTVTuber implements IDTVTuber {
         data["currentGameName"] = this.currentGameName;
         data["currentViewerCount"] = this.currentViewerCount;
         data["currentThumbnailUrl"] = this.currentThumbnailUrl;
+        data["language"] = this.language;
+        data["profilePictureUrl"] = this.profilePictureUrl;
         return data;
     }
 }
@@ -451,6 +457,8 @@ export interface IDTVTuber {
     currentGameName?: string | undefined;
     currentViewerCount?: number;
     currentThumbnailUrl?: string | undefined;
+    language?: string | undefined;
+    profilePictureUrl?: string | undefined;
 }
 //-----/CustomTypes.File-----
 

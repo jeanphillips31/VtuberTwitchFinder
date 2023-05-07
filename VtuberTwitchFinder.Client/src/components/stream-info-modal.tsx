@@ -30,6 +30,7 @@ import Link from "next/link";
 import {AxiosQuery} from "@/api";
 import EmoteTabs from "@/components/emote-tabs";
 import EmoteAccordion from "@/components/emote-accordion";
+import {useEmotesAllQuery} from "@/api/axios-client/Query";
 
 interface Props {
     streamerInfo: StreamerInfo | undefined
@@ -38,7 +39,7 @@ interface Props {
 export default function StreamInfoModal(props: Props) {
     const {isOpen, onOpen, onClose} = useDisclosure()
     const twitchQuery = AxiosQuery.Query.useEmotesQuery(Number(props.streamerInfo?.id));
-    const sevenTvQuery = AxiosQuery.Query.useEmotesAllQuery(props.streamerInfo?.id);
+    const sevenTvQuery = AxiosQuery.Query.useEmotesAllQuery(Number(props.streamerInfo?.id));
     return (
         <>
             <IconButton variant='outline' size='sm' aria-label='Open Streamer Info' onClick={onOpen}
