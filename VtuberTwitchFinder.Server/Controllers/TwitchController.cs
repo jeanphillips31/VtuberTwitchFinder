@@ -10,9 +10,9 @@ namespace VtuberTwitchFinder.Server.Controller;
 public class TwitchController
 {
     [HttpGet("vtubers")]
-    public async Task<ActionResult<IEnumerable<DTVTuber>>> GetLiveVTubersAsync(ITwitchService twitchService)
+    public async Task<ActionResult<DTStreamData>> GetLiveVTubersAsync([FromQuery] string? cursor, ITwitchService twitchService)
     {
-        var result = await twitchService.GetLiveVTubersAsync();
+        var result = await twitchService.GetLiveVTubersAsync(cursor);
 
         return result.ToActionResult();
     }

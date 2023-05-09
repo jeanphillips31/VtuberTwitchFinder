@@ -8,7 +8,7 @@ export default function Footer() {
                     <Stack justify="space-between" direction="row" align="center">
                     </Stack>
                     <Text fontSize="sm" color="subtle">
-                        &copy; {new Date().getFullYear()} Chakra UI Pro, Inc. All rights reserved.
+                        &copy; {new Date().getFullYear()} Whatever, Inc. All rights reserved.
                     </Text>
                 </Stack>
             </Container>

@@ -30,22 +30,20 @@ export default function LiveStreamer(streamer: StreamerInfo) {
                             </Image>
                             <Box position="absolute" bottom={1} right={2} bg='gray.50' rounded='sm' paddingX={1}>
                                 <Text
-                                    fontSize='smaller'>{streamer.viewerCount.toLocaleString("en-US") + " Viewers"}</Text>
+                                    fontSize='smaller'
+                                    color={"black"}>{streamer.viewerCount.toLocaleString("en-US") + " Viewers"}</Text>
                             </Box>
                         </Box>
-                        <HStack spacing={2}>
+                        <HStack spacing={5}>
                             <Image src={streamer.profileURL} alt={streamer.name} borderRadius='full'
                                    boxSize='60px'></Image>
                             <VStack align="left">
                                 <Heading size="lg" isTruncated={true}>{streamer.name}</Heading>
                                 <Text isTruncated={true} fontSize="sm">{streamer.gameName}</Text>
                             </VStack>
-                            {hover ?
-                                (
-                                    <StreamInfoModal
-                                        streamerInfo={streamer}
-                                    />
-                                ) : (<div></div>)}
+                            <StreamInfoModal
+                                streamerInfo={streamer}
+                            />
                         </HStack>
                     </VStack>
                 </CardBody>

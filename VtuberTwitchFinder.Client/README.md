@@ -1,4 +1,4 @@
-```npx react-query-swagger /tanstack /input:https://localhost:44348/swagger/v1/swagger.json /output:src/api/axios-client.ts /template:Axios```
+```npx react-query-swagger /tanstack /input:https://localhost:44348/swagger/v1/swagger.json /output:src/api/axios-client.ts /template:Axios /operationGenerationMode:MultipleClientsFromFirstTagAndPathSegments```
 
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped

@@ -32,71 +32,6 @@ public class TwitchService : ITwitchService
     }
 
     /// <inheritdoc />
-    public async Task<Result<IEnumerable<DTVTuber>>> GetLiveVTubersAsync()
-    {
-        try
-        {
-            var twitchStreams = new List<DTTwitchStream>();
-            var cursor = string.Empty;
-            string accessToken = await _api.Auth.GetAccessTokenAsync();
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            _client.DefaultRequestHeaders.Add("Client-Id", _configuration.ClientId);
-            for (var i = 0; i < 10; i++)
-            {
-                //Add a small delay to rate limit requests
-                await Task.Delay(100);
-
-                //Generate request and send it
-                var message = new HttpRequestMessage(HttpMethod.Get,
-                    $"https://api.twitch.tv/helix/streams?type=live&first=100{(cursor != null || cursor != string.Empty ? $"&after={cursor}" : "")}");
-                HttpResponseMessage messageResponse = await _client.SendAsync(message);
-                if (messageResponse.StatusCode != HttpStatusCode.OK) return Result.Fail("Failed to get streamers from Twitch API");
-
-                //Deserialize data
-                var responseContent = await messageResponse.Content.ReadFromJsonAsync<DTTwitchResponse<DTTwitchStream[]>>();
-                if (responseContent == null) return Result.Fail("Failed to deserialize TwitchResponse");
-
-                //Generate request to get profiles and send it
-                var profileMessage = new HttpRequestMessage(HttpMethod.Get,
-                    $"https://api.twitch.tv/helix/users?id={string.Join("&id=", responseContent.Data.Select(x => x.user_id))}");
-                HttpResponseMessage profileMessageResponse = await _client.SendAsync(profileMessage);
-                if (profileMessageResponse.StatusCode != HttpStatusCode.OK) return Result.Fail("Failed to get profiles from Twitch API");
-
-                //Deserialize data
-                var profileResponseContent = await profileMessageResponse.Content.ReadFromJsonAsync<DTTwitchResponse<DTTwitchStream[]>>();
-                if (profileResponseContent == null) return Result.Fail("Failed to deserialize TwitchResponse");
-
-                //Assign the profile picture
-                foreach (DTTwitchStream dtTwitchStream in responseContent.Data)
-                    dtTwitchStream.profile_image_url = profileResponseContent.Data.Single(s => s.id == dtTwitchStream.user_id).profile_image_url;
-
-                //Add response to the list to be returned
-                twitchStreams.AddRange(responseContent.Data.Where(s =>
-                    s?.tags != null && s.tags.Contains("VTuber", StringComparer.OrdinalIgnoreCase)));
-                cursor = responseContent?.Pagination?.Cursor;
-            }
-
-            return Result.Ok(twitchStreams.Select(stream => new DTVTuber
-            {
-                TwitchId = stream.user_id,
-                CurrentGameName = stream.game_name,
-                CurrentThumbnailUrl = stream.thumbnail_url.Replace("{width}", "1280").Replace("{height}", "720"),
-                CurrentViewerCount = stream.viewer_count,
-                StreamTitle = stream.title,
-                TwitchName = stream.user_name,
-                TwitchUsername = stream.user_login,
-                Language = DTTwitchLanguage.Languages.ContainsKey(stream.language) ? DTTwitchLanguage.Languages[stream.language] : "Language Not Set",
-                ProfilePictureUrl = stream.profile_image_url
-            }));
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Exception in {service}.{method}", nameof(TwitchService), nameof(GetLiveVTubersAsync));
-            return Result.Fail(e.Message);
-        }
-    }
-
-    /// <inheritdoc />
     public async Task<Result<DTStreamerEmotes>> GetChannelEmotes(int broadcasterId)
     {
         try
@@ -180,6 +115,75 @@ public class TwitchService : ITwitchService
         catch (Exception e)
         {
             _logger.LogError(e, "Exception in {service}.{method}", nameof(TwitchService), nameof(GetChannelEmotes));
+            return Result.Fail(e.Message);
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task<Result<DTStreamData>> GetLiveVTubersAsync(string? cursor)
+    {
+        Console.WriteLine(cursor);
+        try
+        {
+            var twitchStreams = new List<DTTwitchStream>();
+            var streamData = new DTStreamData();
+            string accessToken = await _api.Auth.GetAccessTokenAsync();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            _client.DefaultRequestHeaders.Add("Client-Id", _configuration.ClientId);
+            for (var i = 0; i < 2; i++)
+            {
+                //Add a small delay to rate limit requests
+                await Task.Delay(100);
+
+                //Generate request and send it
+                var message = new HttpRequestMessage(HttpMethod.Get,
+                    $"https://api.twitch.tv/helix/streams?type=live&first=100{(cursor != null || cursor != string.Empty ? $"&after={cursor}" : "")}");
+                HttpResponseMessage messageResponse = await _client.SendAsync(message);
+                if (messageResponse.StatusCode != HttpStatusCode.OK) return Result.Fail("Failed to get streamers from Twitch API");
+
+                //Deserialize data
+                var responseContent = await messageResponse.Content.ReadFromJsonAsync<DTTwitchResponse<DTTwitchStream[]>>();
+                if (responseContent == null) return Result.Fail("Failed to deserialize TwitchResponse");
+
+                //Generate request to get profiles and send it
+                var profileMessage = new HttpRequestMessage(HttpMethod.Get,
+                    $"https://api.twitch.tv/helix/users?id={string.Join("&id=", responseContent.Data.Select(x => x.user_id))}");
+                HttpResponseMessage profileMessageResponse = await _client.SendAsync(profileMessage);
+                if (profileMessageResponse.StatusCode != HttpStatusCode.OK) return Result.Fail("Failed to get profiles from Twitch API");
+
+                //Deserialize data
+                var profileResponseContent = await profileMessageResponse.Content.ReadFromJsonAsync<DTTwitchResponse<DTTwitchStream[]>>();
+                if (profileResponseContent == null) return Result.Fail("Failed to deserialize TwitchResponse");
+
+                //Assign the profile picture
+                foreach (DTTwitchStream dtTwitchStream in responseContent.Data)
+                    dtTwitchStream.profile_image_url = profileResponseContent.Data.Single(s => s.id == dtTwitchStream.user_id).profile_image_url;
+
+                //Add response to the list to be returned
+                twitchStreams.AddRange(responseContent.Data.Where(s =>
+                    s?.tags != null && s.tags.Contains("VTuber", StringComparer.OrdinalIgnoreCase)));
+                cursor = responseContent?.Pagination?.Cursor;
+            }
+
+            //Assign data
+            streamData.Cursor = cursor;
+            streamData.VTubers = twitchStreams.Select(stream => new DTVTuber
+            {
+                TwitchId = stream.user_id,
+                CurrentGameName = stream.game_name,
+                CurrentThumbnailUrl = stream.thumbnail_url.Replace("{width}", "1280").Replace("{height}", "720"),
+                CurrentViewerCount = stream.viewer_count,
+                StreamTitle = stream.title,
+                TwitchName = stream.user_name,
+                TwitchUsername = stream.user_login,
+                Language = DTTwitchLanguage.Languages.ContainsKey(stream.language) ? DTTwitchLanguage.Languages[stream.language] : "Language Not Set",
+                ProfilePictureUrl = stream.profile_image_url
+            });
+            return Result.Ok(streamData);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Exception in {service}.{method}", nameof(TwitchService), nameof(GetLiveVTubersAsync));
             return Result.Fail(e.Message);
         }
     }

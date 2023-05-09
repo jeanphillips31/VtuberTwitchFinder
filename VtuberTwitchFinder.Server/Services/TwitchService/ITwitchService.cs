@@ -8,7 +8,7 @@ public interface ITwitchService
     /// <summary>
     ///     Gets a list of up to 300 top current live Vtubers
     /// </summary>
-    public Task<Result<IEnumerable<DTVTuber>>> GetLiveVTubersAsync();
+    public Task<Result<DTStreamData>> GetLiveVTubersAsync(string? cursor);
 
     /// <summary>
     ///     Gets a list of emotes for a specific channel
