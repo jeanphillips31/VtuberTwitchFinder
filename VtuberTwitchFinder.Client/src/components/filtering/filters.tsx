@@ -3,9 +3,11 @@ import CheckboxFilterPopover from "@/components/filtering/checkbox-filter-popove
 import {DTVTuber} from "@/api/axios-client";
 import FilterProperties, {FilterOption} from "@/data/filter-properties";
 
+type FilterCallback = (filterType: FilterOption, value: string) => void;
+
 interface Props {
     vtubers: DTVTuber[],
-    filterProps: FilterProperties
+    filtersUpdated: FilterCallback
 }
 
 export default function Filters(props: Props) {
@@ -13,7 +15,8 @@ export default function Filters(props: Props) {
         <>
             <SimpleGrid display="inline-grid" spacing="4" columns={4}>
                 <CheckboxFilterPopover label={"Language"} defaultValue={[]} options={GetLanguages(props)}
-                                       filterProps={props.filterProps} filterType={FilterOption.language}/>
+                                       filterProps={props.filters} filterType={FilterOption.language}
+                                       filterUpdated={props.filtersUpdated}/>
             </SimpleGrid>
         </>
     )

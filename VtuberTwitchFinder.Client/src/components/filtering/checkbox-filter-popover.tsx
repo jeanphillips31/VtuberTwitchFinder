@@ -4,21 +4,21 @@ import {FilterPopoverButton, FilterPopoverContent} from "@/components/filtering/
 import CheckboxFilter from "@/components/filtering/checkbox-filter";
 import FilterProperties, {FilterOption} from "@/data/filter-properties";
 
+type FilterCallback = (filterType: FilterOption, value: string) => void;
+
 interface Props {
     label: string;
     defaultValue: (string | number)[] | undefined;
     options: Array<{ label: string; value: string; count?: number }>;
     filterProps: FilterProperties;
-    filterType: FilterOption
+    filterType: FilterOption,
+    filterUpdated: FilterCallback
 }
 
-let properties: Props;
-
 export default function CheckboxFilterPopover(props: Props) {
-    properties = props;
     const state = useFilterState({
         defaultValue: props.defaultValue,
-        onSubmit: updateFilters,
+        onSubmit: (data) => props.filterUpdated(props.filterType, data),
     })
 
     return (
@@ -41,8 +41,4 @@ export default function CheckboxFilterPopover(props: Props) {
             </FilterPopoverContent>
         </Popover>
     )
-}
-
-function updateFilters(state: any) {
-    properties.filterProps.setValue(properties.filterType, state)
 }

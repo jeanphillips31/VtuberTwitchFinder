@@ -7,9 +7,9 @@ import {AxiosQuery} from "@/api";
 import Footer from "@/components/footer";
 import {useInView} from 'react-intersection-observer'
 import {useInfiniteQuery} from "@tanstack/react-query";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useCallback} from "react";
 import Navbar from "@/components/navbar";
-import FilterProperties from "@/data/filter-properties";
+import FilterProperties, {FilterOption} from "@/data/filter-properties";
 import CheckboxFilterPopover from "@/components/filtering/filters";
 import Filters from "@/components/filtering/filters";
 import {DTVTuber} from "@/api/axios-client";
@@ -18,8 +18,7 @@ const inter = Inter({subsets: ['latin']})
 
 export default function Home() {
     const {ref, inView} = useInView()
-    const filterProperties = new FilterProperties();
-    const [vtubers, setVtubers] = useState([])
+    const [filters, setFilters] = useState<FilterProperties>(new FilterProperties());
     const [filteredVtubers, setFilteredVtubers] = useState<DTVTuber[]>([])
     const {
         status,
@@ -45,18 +44,23 @@ export default function Home() {
 
     useEffect(() => {
         updateFilteredVTubers();
-    }, [vtubers]);
+    }, [filters]);
+
+    const filterCallback = useCallback((filterType: FilterOption, value: string) => {
+        setFilters(previous => {
+            previous.setValue(filterType, value);
+            return previous;
+        });
+    }, []);
 
     function updateFilteredVTubers() {
-        setVtubers(data?.pages?.flatMap((page) => page?.vTubers));
-
-        let items: DTVTuber[] = filteredVtubers;
-
-        if (filterProperties.getExactMatch() !== "") {
+        let items = data?.pages?.flatMap((page) => page?.vTubers);
+        console.log(items);
+        if (filters.getExactMatch() !== "") {
             items = items.filter((item))
         } else {
-            if (filterProperties.getLanguages().length > 0) {
-                items = items.filter((item) => filterProperties.getLanguages().includes(item.language))
+            if (filters.getLanguages().length > 0) {
+                items = items.filter((item) => filters.getLanguages().includes(item.language))
             }
         }
 
@@ -77,7 +81,7 @@ export default function Home() {
                     (
                         <Box>
                             <Filters vtubers={data?.pages?.flatMap((page) => page?.vTubers)}
-                                     filterProps={filterProperties}/>
+                                     filters={filters} filtersUpdated={filterCallback}/>
                             <Grid templateColumns="repeat(3, 1fr)" gap={6}>
                                 {
                                     filteredVtubers.map((stream) => (
