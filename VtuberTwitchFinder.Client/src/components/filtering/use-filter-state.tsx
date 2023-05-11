@@ -13,7 +13,7 @@ export function useFilterState<T>(props: UseFilterStateProps<T>) {
         value: state,
         onChange: setState,
         onReset() {
-            setState(defaultValue)
+            setState(defaultValue);
         },
         onSubmit() {
             onSubmit?.(state as T)

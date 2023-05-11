@@ -23,28 +23,30 @@ public class SevenTvService : ISevenTvService
     {
         try
         {
-            //Add a small delay to rate limit requests
-            await Task.Delay(100);
+            // //Add a small delay to rate limit requests
+            // await Task.Delay(100);
+            //
+            //
+            // //Generate request and send it
+            // var message = new HttpRequestMessage(HttpMethod.Get,
+            //     $"{_BASE_URL}/users/{broadcasterId}/emotes");
+            // HttpResponseMessage messageResponse = await _client.SendAsync(message);
+            //
+            // //If the broadcaster does not have a 7TV account, we want to still return an Ok result
+            // if (messageResponse.StatusCode != HttpStatusCode.OK) return Result.Ok();
+            //
+            // //Deserialize data
+            // var responseContent = await messageResponse.Content.ReadFromJsonAsync<DTSevenTvResponse[]>();
+            // if (responseContent == null) return Result.Fail("Failed to deserialize 7TV Response");
+            //
+            // return Result.Ok(responseContent.Select(emote => new DTEmote
+            // {
+            //     Id = emote.id,
+            //     Name = emote.name,
+            //     Url = emote.urls.Last().Last()
+            // }));
 
-
-            //Generate request and send it
-            var message = new HttpRequestMessage(HttpMethod.Get,
-                $"{_BASE_URL}/users/{broadcasterId}/emotes");
-            HttpResponseMessage messageResponse = await _client.SendAsync(message);
-
-            //If the broadcaster does not have a 7TV account, we want to still return an Ok result
-            if (messageResponse.StatusCode != HttpStatusCode.OK) return Result.Ok();
-
-            //Deserialize data
-            var responseContent = await messageResponse.Content.ReadFromJsonAsync<DTSevenTvResponse[]>();
-            if (responseContent == null) return Result.Fail("Failed to deserialize 7TV Response");
-
-            return Result.Ok(responseContent.Select(emote => new DTEmote
-            {
-                Id = emote.id,
-                Name = emote.name,
-                Url = emote.urls.Last().Last()
-            }));
+            return Result.Ok();
         }
         catch (Exception e)
         {

@@ -24,4 +24,12 @@ public class TwitchController
 
         return result.ToActionResult();
     }
+
+    [HttpGet("clips")]
+    public async Task<ActionResult<IEnumerable<DTTwitchClip>>> GetChannelClips([FromQuery] int broadcasterId, ITwitchService twitchService)
+    {
+        var result = await twitchService.GetChannelClips(broadcasterId);
+
+        return result.ToActionResult();
+    }
 }

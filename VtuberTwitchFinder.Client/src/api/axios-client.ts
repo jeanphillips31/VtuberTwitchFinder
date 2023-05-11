@@ -242,6 +242,69 @@ export class TwitchClient {
         }
         return Promise.resolve<DTStreamerEmotes>(null as any);
     }
+
+    /**
+     * @param broadcasterId (optional) 
+     * @return Success
+     */
+    clips(broadcasterId: number | undefined, cancelToken?: CancelToken | undefined): Promise<DTTwitchClip[]> {
+        let url_ = this.baseUrl + "/api/Twitch/clips?";
+        if (broadcasterId === null)
+            throw new Error("The parameter 'broadcasterId' cannot be null.");
+        else if (broadcasterId !== undefined)
+            url_ += "broadcasterId=" + encodeURIComponent("" + broadcasterId) + "&";
+          url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processClips(_response);
+        });
+    }
+
+    protected processClips(response: AxiosResponse): Promise<DTTwitchClip[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DTTwitchClip.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return Promise.resolve<DTTwitchClip[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<DTTwitchClip[]>(null as any);
+    }
 }
 
 //-----/ClientClass----
@@ -471,6 +534,58 @@ export interface IDTSubscriptionEmotes {
     tier3Emotes?: DTEmote[] | undefined;
 }
 
+export class DTTwitchClip implements IDTTwitchClip {
+    id?: string | undefined;
+    embedUrl?: string | undefined;
+    title?: string | undefined;
+    creatorName?: string | undefined;
+    viewCount?: number;
+
+    constructor(data?: IDTTwitchClip) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.embedUrl = _data["embedUrl"];
+            this.title = _data["title"];
+            this.creatorName = _data["creatorName"];
+            this.viewCount = _data["viewCount"];
+        }
+    }
+
+    static fromJS(data: any): DTTwitchClip {
+        data = typeof data === 'object' ? data : {};
+        let result = new DTTwitchClip();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["embedUrl"] = this.embedUrl;
+        data["title"] = this.title;
+        data["creatorName"] = this.creatorName;
+        data["viewCount"] = this.viewCount;
+        return data;
+    }
+}
+
+export interface IDTTwitchClip {
+    id?: string | undefined;
+    embedUrl?: string | undefined;
+    title?: string | undefined;
+    creatorName?: string | undefined;
+    viewCount?: number;
+}
+
 export class DTVTuber implements IDTVTuber {
     twitchId?: string | undefined;
     twitchName?: string | undefined;
@@ -671,6 +786,7 @@ export function initPersister() {
 
   addResultTypeFactory('TwitchClient___vtubers', (data: any) => { const result = new DTStreamData(); result.init(data); return result; });
   addResultTypeFactory('TwitchClient___emotes', (data: any) => { const result = new DTStreamerEmotes(); result.init(data); return result; });
+  addResultTypeFactory('TwitchClient___clips', (data: any) => { const result = new DTTwitchClip(); result.init(data); return result; });
 
 
 }

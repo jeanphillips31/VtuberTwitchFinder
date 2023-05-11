@@ -10,8 +10,13 @@ import {
 } from '@chakra-ui/react'
 import {useState} from "react";
 import StreamInfoModal from "@/components/stream-info-modal";
+import {DTEmote, DTStreamerEmotes, DTVTuber} from "@/api/axios-client";
 
-export default function LiveStreamer(streamer: StreamerInfo) {
+interface Props {
+    streamer: DTVTuber
+}
+
+export default function LiveStreamer(props: Props) {
     const [hover, setHover] = useState(false);
     return (
         <>
@@ -26,23 +31,25 @@ export default function LiveStreamer(streamer: StreamerInfo) {
                     >
                         <Box position="relative" width={384}
                              height={216}>
-                            <Image src={streamer.thumbnailURL} alt={streamer.name} height="100%" width="100%">
+                            <Image src={props.streamer.currentThumbnailUrl} alt={props.streamer.twitchName}
+                                   height="100%" width="100%">
                             </Image>
                             <Box position="absolute" bottom={1} right={2} bg='gray.50' rounded='sm' paddingX={1}>
                                 <Text
                                     fontSize='smaller'
-                                    color={"black"}>{streamer.viewerCount.toLocaleString("en-US") + " Viewers"}</Text>
+                                    color={"black"}>{props.streamer.currentViewerCount?.toLocaleString("en-US") + " Viewers"}</Text>
                             </Box>
                         </Box>
                         <HStack spacing={5}>
-                            <Image src={streamer.profileURL} alt={streamer.name} borderRadius='full'
+                            <Image src={props.streamer.profilePictureUrl} alt={props.streamer.twitchUsername}
+                                   borderRadius='full'
                                    boxSize='60px'></Image>
                             <VStack align="left">
-                                <Heading size="lg" isTruncated={true}>{streamer.name}</Heading>
-                                <Text isTruncated={true} fontSize="sm">{streamer.gameName}</Text>
+                                <Heading size="lg" isTruncated={true}>{props.streamer.twitchName}</Heading>
+                                <Text isTruncated={true} fontSize="sm">{props.streamer.currentGameName}</Text>
                             </VStack>
                             <StreamInfoModal
-                                streamerInfo={streamer}
+                                streamerInfo={props.streamer}
                             />
                         </HStack>
                     </VStack>

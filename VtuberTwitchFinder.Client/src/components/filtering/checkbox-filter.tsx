@@ -12,6 +12,7 @@ import {
     useColorModeValue as mode,
 } from '@chakra-ui/react'
 import {SearchIcon} from "@chakra-ui/icons";
+import {useState} from "react";
 
 type CheckboxFilterProps = Omit<CheckboxGroupProps, 'onChange'> & {
     hideLabel?: boolean
@@ -24,6 +25,7 @@ type CheckboxFilterProps = Omit<CheckboxGroupProps, 'onChange'> & {
 
 export default function CheckboxFilter(props: CheckboxFilterProps) {
     const {options, label, hideLabel, spacing = '2', showSearch, ...rest} = props
+    const [searchValue, updateSearchValue] = useState("");
 
     return (
         <Stack as="fieldset" spacing={spacing}>
@@ -38,6 +40,9 @@ export default function CheckboxFilter(props: CheckboxFilterProps) {
                         placeholder="Search..."
                         rounded="md"
                         focusBorderColor={mode('blue.500', 'blue.200')}
+                        onChange={(val) => {
+                            updateSearchValue(val.currentTarget.value)
+                        }}
                     />
                     <InputRightElement pointerEvents="none" color="gray.400" fontSize="lg">
                         <SearchIcon/>
@@ -46,15 +51,18 @@ export default function CheckboxFilter(props: CheckboxFilterProps) {
             )}
             <CheckboxGroup {...rest}>
                 {options.map((option) => (
-                    <Checkbox key={option.value} value={option.value} colorScheme="blue">
-                        <span>{option.label}</span>
-                        {option.count != null && (
-                            <Box as="span" color="gray.500" fontSize="sm">
-                                {' '}
-                                ({option.count})
-                            </Box>
-                        )}
-                    </Checkbox>
+                    <Box>
+                        {searchValue === "" || option.value.toLowerCase().match(searchValue.toLowerCase()) ? (
+                            <Checkbox key={option.value} value={option.value} colorScheme="blue">
+                                <span>{option.label}</span>
+                                {option.count != null && (
+                                    <Box as="span" color="gray.500" fontSize="sm">
+                                        {' '}
+                                        ({option.count})
+                                    </Box>
+                                )}
+                            </Checkbox>) : (<div></div>)}
+                    </Box>
                 ))}
             </CheckboxGroup>
         </Stack>

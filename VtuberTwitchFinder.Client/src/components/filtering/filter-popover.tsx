@@ -61,19 +61,6 @@ export function FilterPopoverContent(props: FilterPopoverContentProps) {
         <PopoverContent _focus={{shadow: 'none', outline: 0}} _focusVisible={{shadow: 'outline'}}>
             {header && <PopoverHeader srOnly>{header}</PopoverHeader>}
             <PopoverBody padding="6">{children}</PopoverBody>
-            <PopoverFooter>
-                <FilterActionButtons
-                    onClickCancel={() => {
-                        onClickCancel?.()
-                        onClose()
-                    }}
-                    isCancelDisabled={isCancelDisabled}
-                    onClickApply={() => {
-                        onClickApply?.()
-                        onClose()
-                    }}
-                />
-            </PopoverFooter>
         </PopoverContent>
     )
 }

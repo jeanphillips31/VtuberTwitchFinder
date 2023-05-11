@@ -1,9 +1,10 @@
-import {SimpleGrid} from "@chakra-ui/react";
+import {Box, Button, SimpleGrid, Text} from "@chakra-ui/react";
 import CheckboxFilterPopover from "@/components/filtering/checkbox-filter-popover";
 import {DTVTuber} from "@/api/axios-client";
 import FilterProperties, {FilterOption} from "@/data/filter-properties";
+import {useState} from "react";
 
-type FilterCallback = (filterType: FilterOption, value: string) => void;
+type FilterCallback = (filterType: FilterOption, value: (string | number)[]) => void;
 
 interface Props {
     vtubers: DTVTuber[],
@@ -11,14 +12,24 @@ interface Props {
 }
 
 export default function Filters(props: Props) {
+    const [reset, setReset] = useState();
     return (
-        <>
-            <SimpleGrid display="inline-grid" spacing="4" columns={4}>
+        <Box mb={5} mt={-10}>
+            <SimpleGrid display="inline-grid" spacing="4" columns={5}>
+                <Text textAlign={"center"} justifyContent={"center"}>Filter By: </Text>
                 <CheckboxFilterPopover label={"Language"} defaultValue={[]} options={GetLanguages(props)}
-                                       filterProps={props.filters} filterType={FilterOption.language}
-                                       filterUpdated={props.filtersUpdated}/>
+                                       filterType={FilterOption.language}
+                                       filterUpdated={props.filtersUpdated}
+                                       showSearch={false} key={"lang"} reset={reset}/>
+                <CheckboxFilterPopover label={"Game"} defaultValue={[]} options={GetGames(props)}
+                                       filterType={FilterOption.gameName}
+                                       filterUpdated={props.filtersUpdated}
+                                       showSearch={true} key={"game"} reset={reset}/>
+                <Button onClick={() => {
+                    setReset(true);
+                }}>Reset</Button>
             </SimpleGrid>
-        </>
+        </Box>
     )
 }
 
@@ -34,6 +45,20 @@ function GetLanguages(props: Props): Array<{ label: string; value: string; count
         }
 
     }
-
     return languages;
+}
+
+function GetGames(props: Props): Array<{ label: string; value: string; count?: number }> {
+    let games: Array<{ label: string; value: string, count: number }> = [];
+    for (let val of props.vtubers) {
+        //Check to see if games array already has this value. If it does then update the Count, otherwise add it
+        if (games.some((x) => x.value === val.currentGameName)) {
+            let indexToUpdate = games.findIndex((item) => item.value === val.currentGameName);
+            games[indexToUpdate].count += 1;
+        } else {
+            games.push({label: val.currentGameName ?? "", value: val.currentGameName ?? "", count: 1})
+        }
+
+    }
+    return games;
 }

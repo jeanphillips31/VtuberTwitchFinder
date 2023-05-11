@@ -27,21 +27,6 @@ builder.Services.AddScoped<ISevenTvService, SevenTvService>();
 builder.Services.Configure<TwitchApiSettings>(builder.Configuration);
 builder.Services.AddHttpClient();
 
-#region Authentication
-
-// builder.Services.AddAuthentication(options =>
-// {
-//     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-// })
-//     .AddTwitch(options =>
-//     {
-//         options.ClientId = Configuration["ClientId"];
-//         options.ClientSecret = Configuration["ClientSecret"];
-//         options.SaveTokens = true;
-//     });
-
-#endregion
-
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.

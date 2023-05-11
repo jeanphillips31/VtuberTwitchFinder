@@ -28,6 +28,10 @@ export type EmotesTwitchQueryParameters = {
   broadcasterId: number | undefined;
 };
 
+export type ClipsTwitchQueryParameters = {
+  broadcasterId: number | undefined;
+};
+
     
 export function vtubersUrl(cursor: string | undefined): string {
   let url_ = getBaseUrl() + "/api/Twitch/vtubers?";
@@ -219,5 +223,102 @@ export function setEmotesData(queryClient: QueryClient, updater: (data: Types.DT
  * @return Success
  */
 export function setEmotesDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: Types.DTStreamerEmotes | undefined) => Types.DTStreamerEmotes) {
+  queryClient.setQueryData(queryKey, updater);
+}
+    
+    
+export function clipsUrl(broadcasterId: number | undefined): string {
+  let url_ = getBaseUrl() + "/api/Twitch/clips?";
+if (broadcasterId === null)
+    throw new Error("The parameter 'broadcasterId' cannot be null.");
+else if (broadcasterId !== undefined)
+    url_ += "broadcasterId=" + encodeURIComponent("" + broadcasterId) + "&";
+  url_ = url_.replace(/[?&]$/, "");
+  return url_;
+}
+
+let clipsDefaultOptions: UseQueryOptions<Types.DTTwitchClip[], unknown, Types.DTTwitchClip[]> = {
+  queryFn: __clips,
+};
+export function getClipsDefaultOptions(): UseQueryOptions<Types.DTTwitchClip[], unknown, Types.DTTwitchClip[]> {
+  return clipsDefaultOptions;
+};
+export function setClipsDefaultOptions(options: UseQueryOptions<Types.DTTwitchClip[], unknown, Types.DTTwitchClip[]>) {
+  clipsDefaultOptions = options;
+}
+
+export function clipsQueryKey(broadcasterId: number | undefined): QueryKey;
+export function clipsQueryKey(...params: any[]): QueryKey {
+  if (params.length === 1 && isParameterObject(params[0])) {
+    const { broadcasterId,  } = params[0] as ClipsTwitchQueryParameters;
+
+    return trimArrayEnd([
+        'TwitchClient',
+        'clips',
+        broadcasterId as any,
+      ]);
+  } else {
+    return trimArrayEnd([
+        'TwitchClient',
+        'clips',
+        ...params
+      ]);
+  }
+}
+function __clips(context: QueryFunctionContext) {
+  return Client().clips(
+      context.queryKey[2] as number | undefined    );
+}
+
+export function useClipsQuery<TSelectData = Types.DTTwitchClip[], TError = unknown>(dto: ClipsTwitchQueryParameters, options?: UseQueryOptions<Types.DTTwitchClip[], TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+/**
+ * @param broadcasterId (optional) 
+ * @return Success
+ */
+export function useClipsQuery<TSelectData = Types.DTTwitchClip[], TError = unknown>(broadcasterId: number | undefined, options?: UseQueryOptions<Types.DTTwitchClip[], TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useClipsQuery<TSelectData = Types.DTTwitchClip[], TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
+  let options: UseQueryOptions<Types.DTTwitchClip[], TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
+  let broadcasterId: any = undefined;
+  
+  if (params.length > 0) {
+    if (isParameterObject(params[0])) {
+      ({ broadcasterId,  } = params[0] as ClipsTwitchQueryParameters);
+      options = params[1];
+      axiosConfig = params[2];
+    } else {
+      [broadcasterId, options, axiosConfig] = params;
+    }
+  }
+
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
+
+  return useQuery<Types.DTTwitchClip[], TError, TSelectData>({
+    queryFn: __clips,
+    queryKey: clipsQueryKey(broadcasterId),
+    ...clipsDefaultOptions as unknown as UseQueryOptions<Types.DTTwitchClip[], TError, TSelectData>,
+    ...options,
+  });
+}
+/**
+ * @param broadcasterId (optional) 
+ * @return Success
+ */
+export function setClipsData(queryClient: QueryClient, updater: (data: Types.DTTwitchClip[] | undefined) => Types.DTTwitchClip[], broadcasterId: number | undefined) {
+  queryClient.setQueryData(clipsQueryKey(broadcasterId),
+    updater
+  );
+}
+
+/**
+ * @param broadcasterId (optional) 
+ * @return Success
+ */
+export function setClipsDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: Types.DTTwitchClip[] | undefined) => Types.DTTwitchClip[]) {
   queryClient.setQueryData(queryKey, updater);
 }

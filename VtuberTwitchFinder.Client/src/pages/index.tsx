@@ -13,6 +13,7 @@ import FilterProperties, {FilterOption} from "@/data/filter-properties";
 import CheckboxFilterPopover from "@/components/filtering/filters";
 import Filters from "@/components/filtering/filters";
 import {DTVTuber} from "@/api/axios-client";
+import ScrollToTopButton from "@/components/scroll-to-top-button";
 
 const inter = Inter({subsets: ['latin']})
 
@@ -43,28 +44,42 @@ export default function Home() {
     }, [inView])
 
     useEffect(() => {
+        if (status !== "loading" || inView) {
+            updateFilteredVTubers();
+        }
+    }, [status, inView]);
+
+    useEffect(() => {
         updateFilteredVTubers();
     }, [filters]);
 
-    const filterCallback = useCallback((filterType: FilterOption, value: string) => {
-        setFilters(previous => {
-            previous.setValue(filterType, value);
-            return previous;
-        });
-    }, []);
+    const filterCallback = useCallback((filterType: FilterOption, value: (string | number)[]) => {
+        //Create a new object to trigger refresh
+        let f = new FilterProperties();
+        //Assign previous filters to the new object
+        f.setExactMatch(filters.getExactMatch());
+        f.setLanguage(filters.getLanguages());
+        f.setGameName(filters.getGameNames());
+        f.setValue(filterType, value)
+        setFilters(f);
+    }, [filters]);
 
     function updateFilteredVTubers() {
-        let items = data?.pages?.flatMap((page) => page?.vTubers);
-        console.log(items);
+        let items = data?.pages.flatMap((page) => page.vTubers) ?? [];
         if (filters.getExactMatch() !== "") {
-            items = items.filter((item))
+            //items = items.filter((item))
         } else {
             if (filters.getLanguages().length > 0) {
-                items = items.filter((item) => filters.getLanguages().includes(item.language))
+                items = items.filter((item) => filters.getLanguages().includes(item?.language as string))
+            }
+            if (filters.getGameNames().length > 0) {
+                items = items.filter((item) => filters.getGameNames().includes(item?.currentGameName as string))
             }
         }
-
-        setFilteredVtubers(items);
+        if (items !== undefined) {
+            console.log(items);
+            setFilteredVtubers(items as DTVTuber[]);
+        }
     }
 
     return (
@@ -76,25 +91,19 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
             <Navbar/>
+            <ScrollToTopButton/>
             <main className={`${styles.main} ${inter.className}`}>
                 {status === "loading" ? (<Spinner/>) :
                     (
                         <Box>
-                            <Filters vtubers={data?.pages?.flatMap((page) => page?.vTubers)}
-                                     filters={filters} filtersUpdated={filterCallback}/>
+                            <Filters vtubers={data?.pages?.flatMap((page) => page?.vTubers) as DTVTuber[]}
+                                     filtersUpdated={filterCallback}/>
                             <Grid templateColumns="repeat(3, 1fr)" gap={6}>
                                 {
                                     filteredVtubers.map((stream) => (
                                         <GridItem key={stream.twitchId}>
                                             <LiveStreamer
-                                                id={stream.twitchId ?? ""}
-                                                name={stream.twitchName ?? ""}
-                                                username={stream.twitchUsername ?? ""}
-                                                streamTitle={stream.streamTitle ?? ""}
-                                                gameName={stream.currentGameName ?? ""}
-                                                viewerCount={stream.currentViewerCount ?? 0}
-                                                thumbnailURL={stream.currentThumbnailUrl ?? ""}
-                                                profileURL={stream.profilePictureUrl ?? ""}
+                                                streamer={stream}
                                             />
                                         </GridItem>
                                     ))
