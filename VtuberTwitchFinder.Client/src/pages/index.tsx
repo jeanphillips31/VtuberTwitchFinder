@@ -37,10 +37,9 @@ export default function Home() {
 
     useEffect(() => {
         if (inView) {
-            console.log("refreshing page...")
             fetchNextPage();
         }
-    }, [inView])
+    }, [inView, fetchNextPage])
 
 
     const filterCallback = useCallback((filterType: FilterOption, value: (string | number)[]) => {
@@ -76,7 +75,7 @@ export default function Home() {
             <Navbar/>
             <ScrollToTopButton/>
             <main className={`${styles.main} ${inter.className}`}>
-                {status === "loading" ? (<Spinner/>) :
+                {status === "loading" ? (<Spinner mt={10}/>) :
                     (
                         <Box>
                             <Filters vtubers={data?.pages?.flatMap((page) => page?.vTubers) as DTVTuber[]}

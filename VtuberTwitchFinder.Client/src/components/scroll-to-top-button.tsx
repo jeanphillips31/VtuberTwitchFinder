@@ -21,7 +21,9 @@ export default function ScrollToTopButton() {
             }
         };
         window.addEventListener("scroll", handler);
-        return window.removeEventListener("scroll", handler);
+        return () => {
+            window.removeEventListener("scroll", handler)
+        };
     }, []);
 
     return (
