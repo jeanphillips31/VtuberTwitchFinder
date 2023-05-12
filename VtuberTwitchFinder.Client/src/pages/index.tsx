@@ -1,16 +1,15 @@
 import Head from 'next/head'
 import {Inter} from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import {Box, Grid, GridItem, SimpleGrid, Skeleton, Spinner} from "@chakra-ui/react";
+import {Box, Container, Grid, GridItem, SimpleGrid, Spinner, Wrap, WrapItem} from "@chakra-ui/react";
 import LiveStreamer from "@/components/live-streamer";
 import {AxiosQuery} from "@/api";
 import Footer from "@/components/footer";
 import {useInView} from 'react-intersection-observer'
 import {useInfiniteQuery} from "@tanstack/react-query";
-import {useEffect, useState, useCallback} from "react";
+import {useCallback, useEffect, useState} from "react";
 import Navbar from "@/components/navbar";
 import FilterProperties, {FilterOption} from "@/data/filter-properties";
-import CheckboxFilterPopover from "@/components/filtering/filters";
 import Filters from "@/components/filtering/filters";
 import {DTVTuber} from "@/api/axios-client";
 import ScrollToTopButton from "@/components/scroll-to-top-button";
@@ -20,7 +19,6 @@ const inter = Inter({subsets: ['latin']})
 export default function Home() {
     const {ref, inView} = useInView()
     const [filters, setFilters] = useState<FilterProperties>(new FilterProperties());
-    const [filteredVtubers, setFilteredVtubers] = useState<DTVTuber[]>([])
     const {
         status,
         data,
@@ -39,47 +37,32 @@ export default function Home() {
 
     useEffect(() => {
         if (inView) {
+            console.log("refreshing page...")
             fetchNextPage();
         }
     }, [inView])
 
-    useEffect(() => {
-        if (status !== "loading" || inView) {
-            updateFilteredVTubers();
-        }
-    }, [status, inView]);
-
-    useEffect(() => {
-        updateFilteredVTubers();
-    }, [filters]);
 
     const filterCallback = useCallback((filterType: FilterOption, value: (string | number)[]) => {
         //Create a new object to trigger refresh
         let f = new FilterProperties();
-        //Assign previous filters to the new object
-        f.setExactMatch(filters.getExactMatch());
-        f.setLanguage(filters.getLanguages());
-        f.setGameName(filters.getGameNames());
-        f.setValue(filterType, value)
+        if (filterType !== FilterOption.reset) {
+            //Assign previous filters to the new object
+            f.setLanguage(filters.getLanguages());
+            f.setGameName(filters.getGameNames());
+            f.setValue(filterType, value)
+        }
         setFilters(f);
     }, [filters]);
 
-    function updateFilteredVTubers() {
-        let items = data?.pages.flatMap((page) => page.vTubers) ?? [];
-        if (filters.getExactMatch() !== "") {
-            //items = items.filter((item))
-        } else {
-            if (filters.getLanguages().length > 0) {
-                items = items.filter((item) => filters.getLanguages().includes(item?.language as string))
-            }
-            if (filters.getGameNames().length > 0) {
-                items = items.filter((item) => filters.getGameNames().includes(item?.currentGameName as string))
-            }
+    function canShowVTuber(vtuber: DTVTuber): boolean {
+        if (filters.getLanguages().length > 0 && !filters.getLanguages().includes(vtuber.language as string)) {
+            return false;
         }
-        if (items !== undefined) {
-            console.log(items);
-            setFilteredVtubers(items as DTVTuber[]);
+        if (filters.getGameNames().length > 0 && !filters.getGameNames().includes(vtuber.currentGameName as string)) {
+            return false
         }
+        return true;
     }
 
     return (
@@ -97,23 +80,30 @@ export default function Home() {
                     (
                         <Box>
                             <Filters vtubers={data?.pages?.flatMap((page) => page?.vTubers) as DTVTuber[]}
-                                     filtersUpdated={filterCallback}/>
-                            <Grid templateColumns="repeat(3, 1fr)" gap={6}>
-                                {
-                                    filteredVtubers.map((stream) => (
-                                        <GridItem key={stream.twitchId}>
-                                            <LiveStreamer
-                                                streamer={stream}
-                                            />
-                                        </GridItem>
-                                    ))
-                                }
-                            </Grid>
+                                     filtersUpdated={filterCallback}
+                                     filteredVtubers={data?.pages.flatMap((page) => page.vTubers).filter((stream) => canShowVTuber(stream as DTVTuber)) as DTVTuber[]}/>
+                            <Container maxW={"1500"}>
+                                <Wrap justify={"center"}>
+                                    {
+                                        data?.pages.flatMap((page) => page.vTubers).map((stream) => (
+                                            canShowVTuber(stream as DTVTuber) &&
+                                            (
+                                                <WrapItem key={stream?.twitchId}>
+                                                    <LiveStreamer
+                                                        streamer={stream as DTVTuber}
+                                                    />
+                                                </WrapItem>
+                                            )
+                                        ))
+                                    }
+                                </Wrap>
+                            </Container>
                         </Box>
                     )
                 }
-                <Box ref={ref} mt={5}>
-                    {hasNextPage ? (<Spinner/>) : (<div/>)}
+                <Box ref={ref}>
+                    {hasNextPage ? (
+                        <Box mt={5}><Spinner/></Box>) : (<div/>)}
                 </Box>
             </main>
             <Footer/>

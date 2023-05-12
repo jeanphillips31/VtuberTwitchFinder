@@ -13,14 +13,16 @@ export default function ScrollToTopButton() {
     const [showButton, setShowButton] = useState(false);
 
     useEffect(() => {
-        window.addEventListener("scroll", () => {
+        const handler = () => {
             if (window.scrollY > 800) {
                 setShowButton(true);
             } else {
                 setShowButton(false);
             }
-        })
-    });
+        };
+        window.addEventListener("scroll", handler);
+        return window.removeEventListener("scroll", handler);
+    }, []);
 
     return (
         <>

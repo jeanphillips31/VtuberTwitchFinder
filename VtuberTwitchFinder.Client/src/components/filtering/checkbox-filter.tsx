@@ -51,18 +51,16 @@ export default function CheckboxFilter(props: CheckboxFilterProps) {
             )}
             <CheckboxGroup {...rest}>
                 {options.map((option) => (
-                    <Box>
-                        {searchValue === "" || option.value.toLowerCase().match(searchValue.toLowerCase()) ? (
-                            <Checkbox key={option.value} value={option.value} colorScheme="blue">
-                                <span>{option.label}</span>
-                                {option.count != null && (
-                                    <Box as="span" color="gray.500" fontSize="sm">
-                                        {' '}
-                                        ({option.count})
-                                    </Box>
-                                )}
-                            </Checkbox>) : (<div></div>)}
-                    </Box>
+                    (searchValue === "" || option.value.toLowerCase().match(searchValue.toLowerCase())) && (
+                        <Checkbox key={option.value} value={option.value} colorScheme="blue">
+                            <span>{option.label}</span>
+                            {option.count != null && (
+                                <Box as="span" color="gray.500" fontSize="sm">
+                                    {' '}
+                                    ({option.count})
+                                </Box>
+                            )}
+                        </Checkbox>)
                 ))}
             </CheckboxGroup>
         </Stack>

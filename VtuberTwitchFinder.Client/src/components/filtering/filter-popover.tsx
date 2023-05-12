@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react'
 import {ElementType, ReactNode} from 'react'
 import {ChevronDownIcon} from "@chakra-ui/icons";
-import FilterActionButtons, {FilterActionButtonsProps} from "@/components/filtering/filter-action-buttons";
 
 type FilterPopoverButtonProps = {
     label: string
@@ -49,13 +48,13 @@ export function FilterPopoverButton(props: FilterPopoverButtonProps) {
     )
 }
 
-type FilterPopoverContentProps = FilterActionButtonsProps & {
+type FilterPopoverContentProps = {
     header?: string
     children?: ReactNode
 }
 
 export function FilterPopoverContent(props: FilterPopoverContentProps) {
-    const {header, children, onClickCancel, onClickApply, isCancelDisabled} = props
+    const {header, children} = props
     const {onClose} = usePopoverContext()
     return (
         <PopoverContent _focus={{shadow: 'none', outline: 0}} _focusVisible={{shadow: 'outline'}}>

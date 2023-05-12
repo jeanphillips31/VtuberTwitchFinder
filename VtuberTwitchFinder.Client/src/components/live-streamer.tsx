@@ -6,7 +6,7 @@ import {
     Text,
     StackDivider,
     Box,
-    Image, HStack
+    Image, HStack, Flex, Skeleton
 } from '@chakra-ui/react'
 import {useState} from "react";
 import StreamInfoModal from "@/components/stream-info-modal";
@@ -26,32 +26,40 @@ export default function LiveStreamer(props: Props) {
             >
                 <CardBody>
                     <VStack
-                        divider={<StackDivider borderColor='gray.200'/>}
-                        spacing={2}
+                        spacing={3}
+                        width={400}
+                        alignItems={"left"}
                     >
-                        <Box position="relative" width={384}
+                        <Box position="relative"
                              height={216}>
-                            <Image src={props.streamer.currentThumbnailUrl} alt={props.streamer.twitchName}
-                                   height="100%" width="100%">
-                            </Image>
+                            <Box height="100%" width="100%" borderRadius={"5px"} boxShadow={"md"} overflow={"hidden"}
+                                 position={"relative"}>
+                                <Image src={props.streamer.currentThumbnailUrl} alt={props.streamer.twitchName}
+                                       transitionDuration={"0.2s"}
+                                       _hover={{transform: "scale(105%)"}}>
+                                </Image>
+                                <Skeleton position={"absolute"} height="100%" width="100%"/>
+                            </Box>
                             <Box position="absolute" bottom={1} right={2} bg='gray.50' rounded='sm' paddingX={1}>
                                 <Text
                                     fontSize='smaller'
                                     color={"black"}>{props.streamer.currentViewerCount?.toLocaleString("en-US") + " Viewers"}</Text>
                             </Box>
                         </Box>
-                        <HStack spacing={5}>
+                        <Flex alignItems={"center"}>
                             <Image src={props.streamer.profilePictureUrl} alt={props.streamer.twitchUsername}
                                    borderRadius='full'
-                                   boxSize='60px'></Image>
-                            <VStack align="left">
+                                   boxSize='60px'>
+                            </Image>
+                            <VStack align="left" mx={3} spacing={0.5}>
                                 <Heading size="lg" isTruncated={true}>{props.streamer.twitchName}</Heading>
                                 <Text isTruncated={true} fontSize="sm">{props.streamer.currentGameName}</Text>
                             </VStack>
+                            <Box flex={1}/>
                             <StreamInfoModal
                                 streamerInfo={props.streamer}
                             />
-                        </HStack>
+                        </Flex>
                     </VStack>
                 </CardBody>
             </Card>

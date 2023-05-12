@@ -26,6 +26,17 @@ builder.Services.AddScoped<ISevenTvService, SevenTvService>();
 
 builder.Services.Configure<TwitchApiSettings>(builder.Configuration);
 builder.Services.AddHttpClient();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .WithOrigins("http://localhost:3000", "https://localhost:3000", "http://localhost", "https://localhost")
+            .AllowCredentials();
+    });
+});
 
 WebApplication app = builder.Build();
 
@@ -35,6 +46,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors();
 
 app.UseHttpsRedirection();
 

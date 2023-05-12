@@ -3,7 +3,7 @@ import {Popover} from "@chakra-ui/react";
 import {FilterPopoverButton, FilterPopoverContent} from "@/components/filtering/filter-popover";
 import CheckboxFilter from "@/components/filtering/checkbox-filter";
 import FilterProperties, {FilterOption} from "@/data/filter-properties";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 type FilterCallback = (filterType: FilterOption, value: (string | number)[]) => void;
 
@@ -14,7 +14,6 @@ interface Props {
     filterType: FilterOption,
     filterUpdated: FilterCallback,
     showSearch: boolean,
-    reset: boolean
 }
 
 export default function CheckboxFilterPopover(props: Props) {
@@ -23,20 +22,10 @@ export default function CheckboxFilterPopover(props: Props) {
         onSubmit: (data) => props.filterUpdated(props.filterType, data),
     })
 
-    useEffect(() => {
-        if (props.reset) {
-            state.onReset();
-            props.filterUpdated(props.filterType, props.defaultValue ?? [])
-        }
-    }, [props.reset])
-
     return (
         <Popover placement="bottom-start">
             <FilterPopoverButton label={props.label}/>
             <FilterPopoverContent
-                isCancelDisabled={!state.canCancel}
-                onClickApply={state.onSubmit}
-                onClickCancel={state.onReset}
             >
                 <CheckboxFilter
                     hideLabel
