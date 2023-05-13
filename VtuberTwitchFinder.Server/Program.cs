@@ -33,12 +33,8 @@ builder.Services.AddCors(options =>
         builder
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .WithOrigins("http://localhost:3000",
-                "https://localhost:3000",
-                "http://localhost",
-                "https://localhost",
-                "https://vtuber-twitch-finder.vercel.app",
-                "http://vtuber-twitch-finder.vercel.app")
+            .WithOrigins(
+                "https://vtubers.app")
             .AllowCredentials();
     });
 });
