@@ -4,4 +4,5 @@ public class TwitchApiSettings
 {
     public string ClientId { get; set; }
     public string ClientSecret { get; set; }
+    public string Parent { get; set; }
 }

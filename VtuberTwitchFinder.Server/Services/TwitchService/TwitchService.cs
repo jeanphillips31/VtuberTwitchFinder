@@ -220,7 +220,7 @@ public class TwitchService : ITwitchService
         {
             Id = clip.id,
             CreatorName = clip.creator_name,
-            EmbedUrl = clip.embed_url + "&parent=localhost",
+            EmbedUrl = clip.embed_url + $"&parent={_configuration.Parent}",
             Title = clip.title,
             ViewCount = clip.view_count
         }));
