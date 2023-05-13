@@ -43,6 +43,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./VtuberTwitchFinder.Server
+          context: .
+          file: ./VtuberTwitchFinder.Server/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/vtuber-finder-app-backend:latest
