@@ -7,8 +7,8 @@ export default function Footer() {
                 <Stack spacing={{base: '4', md: '5'}}>
                     <Stack justify="space-between" direction="row" align="center">
                     </Stack>
-                    <Text fontSize="sm" color="subtle">
-                        &copy; {new Date().getFullYear()} Whatever, Inc. All rights reserved.
+                    <Text fontSize="sm" color="subtle" textAlign={"center"}>
+                        &copy; {new Date().getFullYear()} vtubers.app. All rights reserved.
                     </Text>
                 </Stack>
             </Container>

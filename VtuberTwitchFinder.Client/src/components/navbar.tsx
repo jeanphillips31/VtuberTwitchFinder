@@ -1,5 +1,7 @@
-import {Box, Button, Flex, Stack, useColorMode, useColorModeValue, Text, Image} from "@chakra-ui/react";
+import {Box, Button, Flex, Stack, useColorMode, useColorModeValue, Link, Image, IconButton} from "@chakra-ui/react";
 import {MoonIcon, SunIcon} from "@chakra-ui/icons";
+import {FaGithub} from "react-icons/fa";
+import {Simulate} from "react-dom/test-utils";
 
 export default function Navbar() {
     const {colorMode, toggleColorMode} = useColorMode();
@@ -13,7 +15,10 @@ export default function Navbar() {
                                alt={"site logo"} height={"100%"}/>
                     </Box>
                     <Flex alignItems={'center'}>
-                        <Stack direction={'row'} spacing={7}>
+                        <Stack direction={'row'} spacing={5}>
+                            <Link href={"https://github.com/laviathan101/VtuberTwitchFinder"} isExternal>
+                                <IconButton aria-label='Github'
+                                            icon={<FaGithub/>}/></Link>
                             <Button onClick={toggleColorMode}>
                                 {colorMode === 'light' ? <MoonIcon/> : <SunIcon/>}
                             </Button>
