@@ -7,7 +7,7 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 if (process.env.NEXT_PUBLIC_BASEURL)
     AxiosQuery.setBaseUrl(process.env.NEXT_PUBLIC_BASEURL);
 else
-    throw new Error("Failed to load base url");
+    console.warn("Failed to load base url");
 const queryClient = new QueryClient();
 
 export default function App({Component, pageProps}: AppProps) {
