@@ -16,7 +16,7 @@ export default function Navbar() {
                     </Box>
                     <Flex alignItems={'center'}>
                         <Stack direction={'row'} spacing={5}>
-                            <Link href={"https://github.com/JRPCodes/VtuberTwitchFinder"} isExternal>
+                            <Link href={"https://github.com/jeanphillips31/VtuberTwitchFinder"} isExternal>
                                 <IconButton aria-label='Github'
                                             icon={<FaGithub/>}/></Link>
                             <Button onClick={toggleColorMode}>
