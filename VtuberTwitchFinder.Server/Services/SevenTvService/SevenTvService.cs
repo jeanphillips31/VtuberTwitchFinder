@@ -45,8 +45,6 @@ public class SevenTvService : ISevenTvService
                 Name = emote.name,
                 Url = emote.urls.Last().Last()
             }));
-
-            //return Result.Ok();
         }
         catch (Exception e)
         {

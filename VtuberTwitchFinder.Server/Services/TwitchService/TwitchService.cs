@@ -112,7 +112,6 @@ public class TwitchService : ITwitchService
                 });
 
             return Result.Ok(emotes);
-            //return Result.Ok();
         }
         catch (Exception e)
         {
@@ -181,8 +180,6 @@ public class TwitchService : ITwitchService
                 ProfilePictureUrl = stream.profile_image_url
             });
             return Result.Ok(streamData);
-
-            //return Result.Ok(DummyVtubers.GetDummyVtubers(cursor ?? "0"));
         }
         catch (Exception e)
         {
@@ -192,7 +189,6 @@ public class TwitchService : ITwitchService
     }
 
     /// <inheritdoc />
-    /// ,,
     public async Task<Result<IEnumerable<DTTwitchClip>>> GetChannelClips(int broadcasterId)
     {
         //Get tokens and assign it to the HttpClient
@@ -224,10 +220,11 @@ public class TwitchService : ITwitchService
             Title = clip.title,
             ViewCount = clip.view_count
         }));
-
-        //return Result.Ok();
     }
 
+    /// <summary>
+    ///     Updates a DateTime to RFC3339 Format that is used by the twitch api
+    /// </summary>
     private string ConvertDateTimeToRFC3339Format(DateTime date)
     {
         return XmlConvert.ToString(date, XmlDateTimeSerializationMode.Utc);
