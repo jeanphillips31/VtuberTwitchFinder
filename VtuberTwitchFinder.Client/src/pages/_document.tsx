@@ -7,7 +7,7 @@ export default function Document() {
         <Html lang="en">
             <Head>
                 <Script
-                    strategy="defer"
+                    strategy="afterInteractive"
                     data-domain="vtubers.app"
                     src="https://plausible.plexus.gg/js/script.js"
                 />
