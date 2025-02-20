@@ -3,7 +3,7 @@ using VtuberTwitchFinder.Server.Configuration;
 using VtuberTwitchFinder.Server.Services.SevenTvService;
 using VtuberTwitchFinder.Server.Services.TwitchService;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>
@@ -19,7 +19,8 @@ builder.Services.AddSwaggerGen(c =>
 #region Services
 
 //Add Services
-builder.Services.AddScoped<ITwitchService, TwitchService>();
+builder.Services.AddHostedService<TwitchCacheRefresher>();
+builder.Services.AddSingleton<ITwitchService, TwitchService>();
 builder.Services.AddScoped<ISevenTvService, SevenTvService>();
 
 #endregion
@@ -38,8 +39,9 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
+builder.Services.AddMemoryCache();
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

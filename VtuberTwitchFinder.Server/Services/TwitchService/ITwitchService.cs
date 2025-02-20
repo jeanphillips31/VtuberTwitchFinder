@@ -14,9 +14,14 @@ public interface ITwitchService
     ///     Gets a list of emotes for a specific channel
     /// </summary>
     public Task<Result<DTStreamerEmotes>> GetChannelEmotes(int broadcasterId);
-    
+
     /// <summary>
     ///     Gets top 3 clips for a specific channel
     /// </summary>
     public Task<Result<IEnumerable<DTTwitchClip>>> GetChannelClips(int broadcasterId);
+
+    /// <summary>
+    ///     Refresh the cached streamer list
+    /// </summary>
+    public Task RefreshCache();
 }
