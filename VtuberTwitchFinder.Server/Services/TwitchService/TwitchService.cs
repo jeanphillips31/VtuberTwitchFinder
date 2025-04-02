@@ -244,7 +244,7 @@ public class TwitchService : ITwitchService
             //Assign the profile picture
             foreach (var dtTwitchStream in responseContent.Data)
                 dtTwitchStream.profile_image_url = profileResponseContent.Data
-                    .Single(s => s.id == dtTwitchStream.user_id).profile_image_url;
+                    .SingleOrDefault(s => s.id == dtTwitchStream.user_id)?.profile_image_url;
 
             //Add response to the list to be returned
             twitchStreams.AddRange(responseContent.Data.Where(s =>
